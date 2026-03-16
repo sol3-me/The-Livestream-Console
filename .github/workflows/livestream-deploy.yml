@@ -1,0 +1,54 @@
+name: Build & Deploy Livestream Console
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch: {}
+
+concurrency:
+  group: livestream-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, linux]
+    permissions:
+      contents: read
+
+    env:
+      HOME: /home/github
+      IMAGE_NAME: livestream-console:latest
+      CONTAINER_NAME: livestream-console
+      HOST_PORT: "8090"
+      CONTAINER_PORT: "3000"
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image locally (no push)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          load: true
+          tags: ${{ env.IMAGE_NAME }}
+
+      - name: Restart container
+        run: |
+          docker rm -f "${CONTAINER_NAME}" 2>/dev/null || true
+          docker run -d \
+            --name "${CONTAINER_NAME}" \
+            --restart unless-stopped \
+            -p ${HOST_PORT}:${CONTAINER_PORT} \
+            -e GOOGLE_CLIENT_ID="${{ secrets.GOOGLE_CLIENT_ID }}" \
+            -e GOOGLE_CLIENT_SECRET="${{ secrets.GOOGLE_CLIENT_SECRET }}" \
+            -e NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" \
+            -e NEXTAUTH_URL="${{ secrets.NEXTAUTH_URL }}" \
+            "${IMAGE_NAME}"
+
+      - name: Cleanup old images
+        run: docker image prune -f

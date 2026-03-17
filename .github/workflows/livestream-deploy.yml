@@ -3,7 +3,9 @@ name: Build & Deploy Livestream Console
 on:
   push:
     branches: [master]
-  workflow_dispatch: {}
+  workflow_dispatch:
+    # Manual triggers are still allowed, but the job-level `if` below
+    # ensures this only ever runs on the canonical repo / master ref.
 
 concurrency:
   group: livestream-deploy
@@ -11,6 +13,12 @@ concurrency:
 
 jobs:
   deploy:
+    # Only run on the canonical repo and only on master.
+    # This prevents fork PRs or copies of this workflow from executing
+    # on the self-hosted runner.
+    if: |
+      github.repository == 'sol3uk/The-Livestream-Console' &&
+      github.ref == 'refs/heads/master'
     runs-on: [self-hosted, linux]
     permissions:
       contents: read

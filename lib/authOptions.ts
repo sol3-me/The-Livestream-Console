@@ -1,7 +1,8 @@
 import { type AuthOptions } from 'next-auth';
+import { type JWT } from 'next-auth/jwt';
 import GoogleProvider from 'next-auth/providers/google';
 
-async function refreshAccessToken(token: Record<string, unknown>) {
+async function refreshAccessToken(token: JWT): Promise<JWT> {
   try {
     const response = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
@@ -43,7 +44,7 @@ export const authOptions: AuthOptions = {
   ],
   session: { strategy: 'jwt' },
   callbacks: {
-    async jwt({ token, account }) {
+    async jwt({ token, account }): Promise<JWT> {
       // On first sign-in, persist tokens from the provider
       if (account) {
         return {
@@ -58,7 +59,7 @@ export const authOptions: AuthOptions = {
         return token;
       }
       // Token expired – try to refresh
-      return refreshAccessToken(token as Record<string, unknown>);
+      return refreshAccessToken(token);
     },
     async session({ session, token }) {
       session.access_token = token.access_token as string;

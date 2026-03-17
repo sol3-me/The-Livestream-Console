@@ -1,4 +1,4 @@
-interface StreamRequest {
+export interface StreamRequest {
   id: string;
   title?: string;
   description?: string;
@@ -8,7 +8,7 @@ interface StreamRequest {
   autoStop?: string | boolean;
 }
 
-interface YouTubeStreamData {
+export interface YouTubeStreamData {
   snippet: {
     title: string;
     description: string;

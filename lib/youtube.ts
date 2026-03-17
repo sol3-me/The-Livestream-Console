@@ -1,4 +1,4 @@
-import { google } from 'googleapis';
+import { google, youtube_v3 } from 'googleapis';
 import { streamStatus as STATUS } from './constants';
 import type { StreamStatus } from './constants';
 
@@ -47,7 +47,7 @@ export async function editStream(accessToken: string, streamData: unknown) {
   const youtube = getYoutubeClient(accessToken);
   return youtube.liveBroadcasts.update({
     part: PART,
-    requestBody: streamData as Parameters<typeof youtube.liveBroadcasts.update>[0]['requestBody'],
+    requestBody: streamData as youtube_v3.Schema$LiveBroadcast,
   });
 }
 

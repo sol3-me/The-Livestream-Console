@@ -29,6 +29,21 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
 }
 
 export const authOptions: AuthOptions = {
+  // Set NEXTAUTH_DEBUG=1 in your environment to enable verbose auth logging.
+  debug: process.env.NEXTAUTH_DEBUG === '1',
+  logger: {
+    error(code, metadata) {
+      console.error('[NextAuth] ERROR:', code, metadata);
+    },
+    warn(code) {
+      console.warn('[NextAuth] WARN:', code);
+    },
+    debug(code, metadata) {
+      if (process.env.NEXTAUTH_DEBUG === '1') {
+        console.debug('[NextAuth] DEBUG:', code, metadata);
+      }
+    },
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,

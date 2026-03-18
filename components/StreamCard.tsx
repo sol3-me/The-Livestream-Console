@@ -23,10 +23,10 @@ export default function StreamCard({ stream, onEdit, onDelete }: StreamCardProps
       <div className="p-4 flex flex-col flex-1">
         <h5 className="font-semibold text-base mb-2 line-clamp-2 dark:text-gray-100">{stream.title}</h5>
         <div className="flex gap-4 mb-2">
-            <label className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 select-none">
+          <label className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 select-none">
             <input type="checkbox" checked={stream.enableAutoStart} disabled readOnly className="accent-blue-600" />
-              auto-start
-            </label>
+            auto-start
+          </label>
           <label className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 select-none">
             <input type="checkbox" checked={stream.enableAutoStop} disabled readOnly className="accent-blue-600" />
             auto-stop

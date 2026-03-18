@@ -1,4 +1,5 @@
 import { authOptions } from '@/lib/authOptions';
+import DashboardActions from '@/components/DashboardActions';
 import { getServerSession } from 'next-auth';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -21,12 +22,7 @@ export default async function DashboardPage() {
           >
             Upcoming Streams
           </Link>
-          <button
-            disabled
-            className="bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 px-6 py-3 rounded-md font-medium cursor-not-allowed"
-          >
-            Create Stream — Coming Soon
-          </button>
+          <DashboardActions />
         </div>
       </div>
     </section>

@@ -10,7 +10,7 @@ interface StreamCardProps {
 
 export default function StreamCard({ stream, onEdit, onDelete }: StreamCardProps) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden flex flex-col">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
       {stream.thumbnail && (
         <img
           src={stream.thumbnail.url}
@@ -21,42 +21,42 @@ export default function StreamCard({ stream, onEdit, onDelete }: StreamCardProps
         />
       )}
       <div className="p-4 flex flex-col flex-1">
-        <h5 className="font-semibold text-base mb-2 line-clamp-2">{stream.title}</h5>
+        <h5 className="font-semibold text-base mb-2 line-clamp-2 dark:text-gray-100">{stream.title}</h5>
         <div className="flex gap-4 mb-2">
-          <label className="flex items-center gap-1.5 text-xs text-gray-500 select-none">
+            <label className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 select-none">
             <input type="checkbox" checked={stream.enableAutoStart} disabled readOnly className="accent-blue-600" />
-            auto-start
-          </label>
-          <label className="flex items-center gap-1.5 text-xs text-gray-500 select-none">
+              auto-start
+            </label>
+          <label className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 select-none">
             <input type="checkbox" checked={stream.enableAutoStop} disabled readOnly className="accent-blue-600" />
             auto-stop
           </label>
         </div>
-        <p className="text-sm text-gray-500 mb-4 line-clamp-3 flex-1">{stream.description}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-3 flex-1">{stream.description}</p>
         <div className="flex items-center gap-2 flex-wrap">
           <a
             href={stream.videoLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+            className="text-xs px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
             View
           </a>
           <button
             onClick={() => onEdit(stream)}
-            className="text-xs px-3 py-1.5 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+            className="text-xs px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
             Edit
           </button>
           <button
             onClick={() => onDelete(stream)}
-            className="text-xs px-3 py-1.5 border border-red-200 text-red-600 rounded hover:bg-red-50 transition-colors"
+            className="text-xs px-3 py-1.5 border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 rounded hover:bg-red-50 dark:hover:bg-red-950 transition-colors"
           >
             Delete
           </button>
         </div>
       </div>
-      <div className="px-4 py-2 bg-gray-50 border-t border-gray-100 text-xs text-gray-400">
+      <div className="px-4 py-2 bg-gray-50 dark:bg-gray-900 border-t border-gray-100 dark:border-gray-700 text-xs text-gray-400 dark:text-gray-500">
         {toLocalDatetime(stream.startTime)} · <span className="font-mono">{stream.id}</span>
       </div>
     </div>

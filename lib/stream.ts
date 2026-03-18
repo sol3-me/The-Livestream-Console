@@ -54,7 +54,14 @@ export class Stream {
     this.snippet = {
       title: request.title ?? ytStream.snippet.title,
       description: request.description ?? ytStream.snippet.description,
-      scheduledStartTime: request.startTime ?? ytStream.snippet.scheduledStartTime,
+      // datetime-local inputs give "YYYY-MM-DDTHH:MM" (local time, no timezone suffix).
+      // new Date() parses that as local time; .toISOString() converts to UTC ISO 8601
+      // as required by the YouTube API. Pass-through if already ISO (contains 'Z' or '+').
+      scheduledStartTime: request.startTime
+        ? /[Z+]/.test(request.startTime)
+          ? request.startTime
+          : new Date(request.startTime).toISOString()
+        : ytStream.snippet.scheduledStartTime,
     };
     this.status = {
       privacyStatus: request.privacyStatus ?? ytStream.status.privacyStatus,

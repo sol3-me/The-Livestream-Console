@@ -11,7 +11,7 @@ export default async function DashboardPage() {
     <section className="py-24 text-center container mx-auto px-4">
       <div className="max-w-lg mx-auto">
         <h1 className="text-4xl font-light mb-4">Dashboard</h1>
-        <p className="text-gray-500 text-lg mb-8">
+        <p className="text-gray-500 dark:text-gray-400 text-lg mb-8">
           This is your livestream control dashboard. More controls can be found below.
         </p>
         <div className="flex justify-center gap-4 flex-wrap">
@@ -23,7 +23,7 @@ export default async function DashboardPage() {
           </Link>
           <button
             disabled
-            className="bg-gray-200 text-gray-400 px-6 py-3 rounded-md font-medium cursor-not-allowed"
+            className="bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 px-6 py-3 rounded-md font-medium cursor-not-allowed"
           >
             Create Stream — Coming Soon
           </button>

@@ -34,26 +34,26 @@ export default function StreamFeatured({ active, last, onStop, onEdit }: StreamF
             Live
           </span>
         </h1>
-        <div className="border-2 border-red-400 rounded-lg p-4 bg-white shadow-sm">
+        <div className="border-2 border-red-400 rounded-lg p-4 bg-white dark:bg-gray-800 shadow-sm">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <IframeEmbed videoId={stream.id} />
             <div>
-              <h2 className="text-xl font-semibold mb-2">{stream.title}</h2>
-              <p className="text-gray-500 text-sm mb-3">{stream.description}</p>
+              <h2 className="text-xl font-semibold mb-2 dark:text-gray-100">{stream.title}</h2>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-3">{stream.description}</p>
               <div className="flex gap-4 mb-3">
-                <label className="flex items-center gap-1.5 text-xs text-gray-500 select-none">
+                <label className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 select-none">
                   <input type="checkbox" checked={stream.enableAutoStart} disabled readOnly />
                   auto-start
                 </label>
-                <label className="flex items-center gap-1.5 text-xs text-gray-500 select-none">
+                <label className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 select-none">
                   <input type="checkbox" checked={stream.enableAutoStop} disabled readOnly />
                   auto-stop
                 </label>
               </div>
-              <p className="text-xs text-gray-400 mb-1">
+              <p className="text-xs text-gray-400 dark:text-gray-500 mb-1">
                 <strong>Live Since:</strong> {toLocalDatetime(stream.actualStartTime)}
               </p>
-              <p className="text-xs text-gray-400 mb-4 font-mono">{stream.id}</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mb-4 font-mono">{stream.id}</p>
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => onStop(stream)}
@@ -65,7 +65,7 @@ export default function StreamFeatured({ active, last, onStop, onEdit }: StreamF
                   href={stream.videoLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors"
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
                   View
                 </a>
@@ -73,13 +73,13 @@ export default function StreamFeatured({ active, last, onStop, onEdit }: StreamF
                   href={stream.controlRoomLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors"
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
                   Live Control
                 </a>
                 <button
                   onClick={() => onEdit(stream)}
-                  className="px-4 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors"
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
                   Edit
                 </button>
@@ -101,31 +101,31 @@ export default function StreamFeatured({ active, last, onStop, onEdit }: StreamF
             Complete
           </span>
         </h1>
-        <div className="border-2 border-green-400 rounded-lg p-4 bg-white shadow-sm">
+        <div className="border-2 border-green-400 rounded-lg p-4 bg-white dark:bg-gray-800 shadow-sm">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <IframeEmbed videoId={stream.id} />
             <div>
-              <h2 className="text-xl font-semibold mb-2">{stream.title}</h2>
-              <p className="text-gray-500 text-sm mb-3">{stream.description}</p>
-              <p className="text-xs text-gray-400 mb-1">
+              <h2 className="text-xl font-semibold mb-2 dark:text-gray-100">{stream.title}</h2>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-3">{stream.description}</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mb-1">
                 <strong>Start Date:</strong> {toLocalDatetime(stream.actualStartTime)}
               </p>
-              <p className="text-xs text-gray-400 mb-1">
+              <p className="text-xs text-gray-400 dark:text-gray-500 mb-1">
                 <strong>End Date:</strong> {toLocalDatetime(stream.actualEndTime)}
               </p>
-              <p className="text-xs text-gray-400 mb-4 font-mono">{stream.id}</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mb-4 font-mono">{stream.id}</p>
               <div className="flex flex-wrap gap-2">
                 <a
                   href={stream.videoLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors"
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
                   View
                 </a>
                 <button
                   onClick={() => onEdit(stream)}
-                  className="px-4 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors"
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
                   Edit
                 </button>

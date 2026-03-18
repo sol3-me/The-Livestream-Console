@@ -50,3 +50,15 @@ export function toLocalDatetime(dateStr?: string): string {
     return '';
   }
 }
+
+/** Convert an ISO datetime string to the value format required by <input type="datetime-local"> */
+export function toDatetimeLocalValue(dateStr?: string): string {
+  if (!dateStr) return '';
+  try {
+    const d = new Date(dateStr);
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  } catch {
+    return '';
+  }
+}

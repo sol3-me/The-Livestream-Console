@@ -15,7 +15,7 @@ export default async function HomePage() {
           <br />
           <strong>The Livestream Console!</strong>
         </h1>
-        <p className="text-gray-500 text-lg mb-8">
+        <p className="text-gray-500 dark:text-gray-400 text-lg mb-8">
           Manage your YouTube live streams in an easy way, and interact with existing events.
         </p>
         <Link

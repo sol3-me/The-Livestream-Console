@@ -103,9 +103,9 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
             />
             <div>
               <h1 className="text-3xl font-light mb-1">Upcoming Streams</h1>
-              <p className="text-sm text-gray-400 italic mb-4">Showing top 10 results.</p>
+              <p className="text-sm text-gray-400 dark:text-gray-500 italic mb-4">Showing top 10 results.</p>
               {streams.upcoming.length === 0 ? (
-                <p className="text-gray-400 text-sm">No upcoming streams found.</p>
+                <p className="text-gray-400 dark:text-gray-500 text-sm">No upcoming streams found.</p>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {streams.upcoming.map((stream) => (

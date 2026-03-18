@@ -23,7 +23,7 @@ export default function DeleteStreamModal({
       footer={
         <button
           onClick={onClose}
-          className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+          className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
         >
           Cancel
         </button>
@@ -33,7 +33,7 @@ export default function DeleteStreamModal({
         <p className="mb-6">
           This will permanently <strong>DELETE</strong> the livestream:
           <br />
-          <em className="text-gray-600">{stream.title}</em>
+          <em className="text-gray-600 dark:text-gray-400">{stream.title}</em>
         </p>
         <button
           onClick={onConfirm}

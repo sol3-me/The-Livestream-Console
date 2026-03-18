@@ -2,11 +2,14 @@
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTheme } from './ThemeProvider';
 
 export default function Navbar() {
   const { data: session } = useSession();
   const pathname = usePathname();
+  const { theme, toggleTheme } = useTheme();
   const isLoggedIn = !!session;
+  const version = process.env.NEXT_PUBLIC_APP_VERSION ?? '3.0.0';
 
   const linkClass = (path: string) =>
     `text-sm transition-colors hover:text-white ${pathname === path ? 'text-white font-semibold' : 'text-gray-400'
@@ -36,7 +39,22 @@ export default function Navbar() {
           <Link href="/about" className={linkClass('/about')}>
             About
           </Link>
-          <span className="text-xs text-gray-600">v2.0</span>
+          <a
+            href={`https://github.com/sol3uk/The-Livestream-Console/releases/tag/v${version}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
+            title={`View v${version} release notes`}
+          >
+            v{version}
+          </a>
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle dark mode"
+            className="text-gray-400 hover:text-white transition-colors text-base leading-none"
+          >
+            {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
           {isLoggedIn ? (
             <button
               onClick={() => signOut({ callbackUrl: '/' })}

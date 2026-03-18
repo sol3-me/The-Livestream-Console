@@ -1,6 +1,6 @@
 'use client';
 import type { FormattedStream } from '@/lib/types';
-import { toLocalDatetime } from '@/lib/utils';
+import { toDatetimeLocalValue, toLocalDatetime } from '@/lib/utils';
 import { useState, type FormEvent } from 'react';
 import Modal from './Modal';
 
@@ -33,6 +33,12 @@ export default function EditStreamModal({
     onSubmit(obj);
   };
 
+  const inputClass =
+    'w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500';
+  const disabledInputClass =
+    'w-full border border-gray-200 dark:border-gray-700 rounded px-3 py-2 text-sm bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-500';
+  const labelClass = 'block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1';
+
   return (
     <Modal
       open={true}
@@ -42,7 +48,7 @@ export default function EditStreamModal({
         <button
           type="button"
           onClick={onClose}
-          className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition-colors"
+          className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
         >
           Cancel
         </button>
@@ -50,8 +56,9 @@ export default function EditStreamModal({
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         <input type="hidden" name="id" value={stream.id} />
+
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="edit-title">
+          <label className={labelClass} htmlFor="edit-title">
             Title
           </label>
           <input
@@ -59,11 +66,12 @@ export default function EditStreamModal({
             type="text"
             name="title"
             defaultValue={stream.title}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputClass}
           />
         </div>
+
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="edit-desc">
+          <label className={labelClass} htmlFor="edit-desc">
             Description
           </label>
           <textarea
@@ -71,44 +79,81 @@ export default function EditStreamModal({
             name="description"
             defaultValue={stream.description}
             rows={3}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={inputClass}
           />
         </div>
+
+        {/* Scheduled start time — editable for upcoming streams, read-only otherwise */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Scheduled For</label>
-          <input
-            type="text"
-            defaultValue={toLocalDatetime(stream.startTime)}
-            disabled
-            className="w-full border border-gray-200 rounded px-3 py-2 text-sm bg-gray-50 text-gray-400"
-          />
+          <label className={labelClass} htmlFor="edit-startTime">
+            Scheduled For
+          </label>
+          {!stream.isLive && !stream.isComplete ? (
+            <input
+              id="edit-startTime"
+              type="datetime-local"
+              name="startTime"
+              defaultValue={toDatetimeLocalValue(stream.startTime)}
+              className={inputClass}
+            />
+          ) : (
+            <input
+              type="text"
+              defaultValue={toLocalDatetime(stream.startTime)}
+              disabled
+              className={disabledInputClass}
+            />
+          )}
         </div>
+
+        {/* Actual times shown for completed streams */}
         {stream.isComplete && (
           <>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Actual Start</label>
+              <label className={labelClass}>Actual Start</label>
               <input
                 type="text"
                 defaultValue={toLocalDatetime(stream.actualStartTime)}
                 disabled
-                className="w-full border border-gray-200 rounded px-3 py-2 text-sm bg-gray-50 text-gray-400"
+                className={disabledInputClass}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Actual End</label>
+              <label className={labelClass}>Actual End</label>
               <input
                 type="text"
                 defaultValue={toLocalDatetime(stream.actualEndTime)}
                 disabled
-                className="w-full border border-gray-200 rounded px-3 py-2 text-sm bg-gray-50 text-gray-400"
+                className={disabledInputClass}
               />
             </div>
           </>
         )}
+
+        {/* Privacy status — editable for upcoming and live streams */}
+        {!stream.isComplete && (
+          <div>
+            <label className={labelClass} htmlFor="edit-privacy">
+              Privacy
+            </label>
+            <select
+              id="edit-privacy"
+              name="privacyStatus"
+              defaultValue={stream.privacyStatus}
+              className={inputClass}
+            >
+              <option value="public">Public</option>
+              <option value="unlisted">Unlisted</option>
+              <option value="private">Private</option>
+            </select>
+          </div>
+        )}
+
+        {/* Auto-start / auto-stop checkboxes */}
         {!stream.isComplete && (
           <div className="flex gap-6">
             {!stream.isLive && (
-              <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
+              <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer select-none">
                 <input
                   type="checkbox"
                   checked={autoStart}
@@ -118,7 +163,7 @@ export default function EditStreamModal({
                 auto-start
               </label>
             )}
-            <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
+            <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={autoStop}
@@ -129,6 +174,7 @@ export default function EditStreamModal({
             </label>
           </div>
         )}
+
         <button
           type="submit"
           disabled={loading}
@@ -140,3 +186,4 @@ export default function EditStreamModal({
     </Modal>
   );
 }
+

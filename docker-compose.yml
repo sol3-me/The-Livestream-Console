@@ -1,0 +1,31 @@
+# Local development compose file.
+# Usage:
+#   docker compose up --build        # build image + start (first run)
+#   docker compose up                # start with existing image
+#   docker compose down              # stop and remove container
+#
+# Requires a .env.local file in the project root with:
+#   NEXTAUTH_SECRET=...
+#   NEXTAUTH_URL=http://localhost:3000
+#   GOOGLE_CLIENT_ID=...
+#   GOOGLE_CLIENT_SECRET=...
+
+services:
+  app:
+    build: .
+    image: livestream-console:local
+    container_name: livestream-console
+    ports:
+      - "3000:3000" # host:container — access at http://localhost:3000
+    env_file:
+      - .env.local # loads your local secrets automatically
+    environment:
+      - NODE_ENV=production
+      - NEXTAUTH_DEBUG=${NEXTAUTH_DEBUG:-0}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s

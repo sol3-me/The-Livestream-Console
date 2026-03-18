@@ -1,0 +1,21 @@
+.git
+node_modules
+.next
+.env
+.env.local
+.env*.local
+npm-debug.log*
+
+# Old Express app artefacts (not needed in the image)
+server.js
+config.js
+googleAuth.js
+controllers/
+helpers/
+middleware/
+models/
+routes/
+scss/
+views/
+public/js/main.js
+public/css/

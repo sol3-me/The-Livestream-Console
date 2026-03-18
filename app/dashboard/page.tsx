@@ -1,5 +1,5 @@
-import { authOptions } from '@/lib/authOptions';
 import DashboardActions from '@/components/DashboardActions';
+import { authOptions } from '@/lib/authOptions';
 import { getServerSession } from 'next-auth';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';

@@ -6,7 +6,7 @@ interface StreamTableRowProps {
     stream: FormattedStream;
     onEdit: (stream: FormattedStream) => void;
     onDelete: (stream: FormattedStream) => void;
-        onCopy: (stream: FormattedStream) => void;
+    onCopy: (stream: FormattedStream) => void;
 }
 
 export default function StreamTableRow({ stream, onEdit, onDelete, onCopy }: StreamTableRowProps) {
@@ -27,10 +27,10 @@ export default function StreamTableRow({ stream, onEdit, onDelete, onCopy }: Str
             </td>
             <td className="py-3 px-4">
                 <span className={`inline-block text-xs px-2 py-0.5 rounded-full font-medium ${stream.privacyStatus === 'public'
-                        ? 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400'
-                        : stream.privacyStatus === 'unlisted'
-                            ? 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-400'
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
+                    ? 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400'
+                    : stream.privacyStatus === 'unlisted'
+                        ? 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-400'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
                     }`}>
                     {stream.privacyStatus}
                 </span>

@@ -5,9 +5,10 @@ import { usePathname } from 'next/navigation';
 import { useTheme } from './ThemeProvider';
 
 export default function Navbar() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const pathname = usePathname();
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, mounted: themeMounted } = useTheme();
+  const isAuthLoading = status === 'loading';
   const isLoggedIn = !!session;
   const version = process.env.NEXT_PUBLIC_APP_VERSION ?? '3.0.0';
 
@@ -22,23 +23,33 @@ export default function Navbar() {
           TLC
         </Link>
         <div className="flex items-center gap-5 flex-wrap">
-          {isLoggedIn ? (
-            <Link href="/dashboard" className={linkClass('/dashboard')}>
-              Dashboard
-            </Link>
+          {isAuthLoading ? (
+            <>
+              <div className="h-4 w-20 bg-gray-700 rounded animate-pulse" />
+              <div className="h-4 w-14 bg-gray-700 rounded animate-pulse" />
+              <div className="h-4 w-12 bg-gray-700 rounded animate-pulse" />
+            </>
           ) : (
-            <Link href="/" className={linkClass('/')}>
-              Home
-            </Link>
+            <>
+              {isLoggedIn ? (
+                <Link href="/dashboard" className={linkClass('/dashboard')}>
+                  Dashboard
+                </Link>
+              ) : (
+                <Link href="/" className={linkClass('/')}>
+                  Home
+                </Link>
+              )}
+              {isLoggedIn && (
+                <Link href="/streams" className={linkClass('/streams')}>
+                  Streams
+                </Link>
+              )}
+              <Link href="/about" className={linkClass('/about')}>
+                About
+              </Link>
+            </>
           )}
-          {isLoggedIn && (
-            <Link href="/streams" className={linkClass('/streams')}>
-              Streams
-            </Link>
-          )}
-          <Link href="/about" className={linkClass('/about')}>
-            About
-          </Link>
           <a
             href={`https://github.com/sol3uk/The-Livestream-Console/releases/tag/v${version}`}
             target="_blank"
@@ -48,14 +59,20 @@ export default function Navbar() {
           >
             v{version}
           </a>
-          <button
-            onClick={toggleTheme}
-            aria-label="Toggle dark mode"
-            className="text-gray-400 hover:text-white transition-colors text-base leading-none"
-          >
-            {theme === 'dark' ? '☀️' : '🌙'}
-          </button>
-          {isLoggedIn ? (
+          {themeMounted ? (
+            <button
+              onClick={toggleTheme}
+              aria-label="Toggle dark mode"
+              className="text-gray-400 hover:text-white transition-colors text-base leading-none"
+            >
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
+          ) : (
+            <div className="w-5 h-5 bg-gray-700 rounded animate-pulse" />
+          )}
+          {isAuthLoading ? (
+            <div className="h-7 w-16 bg-gray-700 rounded animate-pulse" />
+          ) : isLoggedIn ? (
             <button
               onClick={() => signOut({ callbackUrl: '/' })}
               className="text-sm px-3 py-1 border border-red-500 text-red-400 rounded hover:bg-red-500 hover:text-white transition-colors"

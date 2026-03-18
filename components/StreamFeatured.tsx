@@ -57,30 +57,42 @@ export default function StreamFeatured({ active, last, onStop, onEdit }: StreamF
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => onStop(stream)}
-                  className="bg-red-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-red-700 transition-colors"
+                  className="inline-flex items-center gap-1 bg-red-600 text-white px-4 py-2 rounded text-sm font-medium hover:bg-red-700 transition-colors"
                 >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
+                    <path d="M6 5a1 1 0 00-1 1v8a1 1 0 001 1h8a1 1 0 001-1V6a1 1 0 00-1-1H6z" />
+                  </svg>
                   STOP
                 </button>
                 <a
                   href={stream.videoLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="inline-flex items-center gap-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
+                    <path d="M10 3a7 7 0 105.293 11.586l.56.56a1 1 0 101.414-1.414l-.56-.56A7 7 0 0010 3zm0 2a5 5 0 110 10 5 5 0 010-10zm-1 2.5a1 1 0 012 0V10h2.5a1 1 0 110 2H10a1 1 0 01-1-1V7.5z" />
+                  </svg>
                   View
                 </a>
                 <a
                   href={stream.controlRoomLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="inline-flex items-center gap-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
+                    <path d="M3 5a2 2 0 012-2h6a2 2 0 012 2v2.382l2.447-1.632A1 1 0 0117 6.618v6.764a1 1 0 01-1.553.832L13 12.582V15a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" />
+                  </svg>
                   Live Control
                 </a>
                 <button
                   onClick={() => onEdit(stream)}
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="inline-flex items-center gap-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
+                    <path d="M4 13.5V16h2.5l7.37-7.37-2.5-2.5L4 13.5zm10.71-6.21a1 1 0 000-1.41l-1.59-1.59a1 1 0 00-1.41 0l-.88.88 2.5 2.5.88-.88z" />
+                  </svg>
                   Edit
                 </button>
               </div>
@@ -122,8 +134,11 @@ export default function StreamFeatured({ active, last, onStop, onEdit }: StreamF
                   href={stream.videoLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="inline-flex items-center gap-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
+                    <path d="M10 3a7 7 0 105.293 11.586l.56.56a1 1 0 101.414-1.414l-.56-.56A7 7 0 0010 3zm0 2a5 5 0 110 10 5 5 0 010-10zm-1 2.5a1 1 0 012 0V10h2.5a1 1 0 110 2H10a1 1 0 01-1-1V7.5z" />
+                  </svg>
                   View
                 </a>
               </div>

@@ -25,6 +25,7 @@ export interface FormattedStream {
 export interface StreamsData {
   active: FormattedStream[];
   upcoming: FormattedStream[];
+  completed: FormattedStream[];
   last: FormattedStream[];
 }
 

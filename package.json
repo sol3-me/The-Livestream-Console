@@ -1,1 +1,32 @@
-ewogICJuYW1lIjogInRoZS1saXZlc3RyZWFtLWNvbnNvbGUiLAogICJ2ZXJzaW9uIjogIjMuMC4wIiwKICAicHJpdmF0ZSI6IHRydWUsCiAgImVuZ2luZXMiOiB7CiAgICAibm9kZSI6ICI+PTIwLjAuMCIKICB9LAogICJzY3JpcHRzIjogewogICAgImRldiI6ICJuZXh0IGRldiIsCiAgICAiYnVpbGQiOiAibmV4dCBidWlsZCIsCiAgICAic3RhcnQiOiAibmV4dCBzdGFydCIsCiAgICAibGludCI6ICJuZXh0IGxpbnQiCiAgfSwKICAiZGVwZW5kZW5jaWVzIjogewogICAgImdvb2dsZWFwaXMiOiAiXjY3LjEuMCIsCiAgICAibmV4dCI6ICJeMTQuMi4wIiwKICAgICJuZXh0LWF1dGgiOiAiXjQuMjQuMTEiLAogICAgInJlYWN0IjogIl4xOCIsCiAgICAicmVhY3QtZG9tIjogIl4xOCIKICB9LAogICJkZXZEZXBlbmRlbmNpZXMiOiB7CiAgICAiQHR5cGVzL25vZGUiOiAiXjIwIiwKICAgICJAdHlwZXMvcmVhY3QiOiAiXjE4IiwKICAgICJAdHlwZXMvcmVhY3QtZG9tIjogIl4xOCIsCiAgICAiYXV0b3ByZWZpeGVyIjogIl4xMCIsCiAgICAiZXNsaW50IjogIl44IiwKICAgICJlc2xpbnQtY29uZmlnLW5leHQiOiAiXjE0LjIuMCIsCiAgICAicG9zdGNzcyI6ICJeOCIsCiAgICAidGFpbHdpbmRjc3MiOiAiXjMuNC4xIiwKICAgICJ0eXBlc2NyaXB0IjogIl41IgogIH0KfQo=
+{
+  "name": "the-livestream-console",
+  "version": "3.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "googleapis": "^67.1.0",
+    "next": "^14.2.0",
+    "next-auth": "^4.24.11",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10",
+    "eslint": "^8",
+    "eslint-config-next": "^14.2.0",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}

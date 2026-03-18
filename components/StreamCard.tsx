@@ -1,6 +1,6 @@
 'use client';
-import { toLocalDatetime } from '@/lib/utils';
 import type { FormattedStream } from '@/lib/types';
+import { toLocalDatetime } from '@/lib/utils';
 
 interface StreamCardProps {
   stream: FormattedStream;

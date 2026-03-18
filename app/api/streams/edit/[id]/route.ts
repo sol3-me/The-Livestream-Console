@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/authOptions';
-import { getStreamById, editStream } from '@/lib/youtube';
 import { Stream, type StreamRequest, type YouTubeStreamData } from '@/lib/stream';
+import { editStream, getStreamById } from '@/lib/youtube';
+import { getServerSession } from 'next-auth';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(
   req: NextRequest,

@@ -1,6 +1,6 @@
 'use client';
-import Modal from './Modal';
 import type { FormattedStream } from '@/lib/types';
+import Modal from './Modal';
 
 interface StopStreamModalProps {
   stream: FormattedStream;

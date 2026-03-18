@@ -1,11 +1,11 @@
+import StreamsClient from '@/components/StreamsClient';
+import { authOptions } from '@/lib/authOptions';
+import { streamStatus } from '@/lib/constants';
+import type { StreamsData, StreamsPageError } from '@/lib/types';
+import { formatStreams, parallelAsync } from '@/lib/utils';
+import { getStreams } from '@/lib/youtube';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
-import { authOptions } from '@/lib/authOptions';
-import { getStreams } from '@/lib/youtube';
-import { formatStreams, parallelAsync } from '@/lib/utils';
-import { streamStatus } from '@/lib/constants';
-import StreamsClient from '@/components/StreamsClient';
-import type { StreamsData, StreamsPageError } from '@/lib/types';
 
 export default async function StreamsPage() {
   const session = await getServerSession(authOptions);

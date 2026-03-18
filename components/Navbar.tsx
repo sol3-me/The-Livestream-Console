@@ -1,5 +1,5 @@
 'use client';
-import { useSession, signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -9,8 +9,7 @@ export default function Navbar() {
   const isLoggedIn = !!session;
 
   const linkClass = (path: string) =>
-    `text-sm transition-colors hover:text-white ${
-      pathname === path ? 'text-white font-semibold' : 'text-gray-400'
+    `text-sm transition-colors hover:text-white ${pathname === path ? 'text-white font-semibold' : 'text-gray-400'
     }`;
 
   return (

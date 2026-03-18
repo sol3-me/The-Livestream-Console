@@ -22,7 +22,7 @@ jobs:
     runs-on: [self-hosted, Linux, X64]
     permissions:
       contents: read
-      packages: write   # required to push images to GHCR
+      packages: write # required to push images to GHCR
 
     env:
       IMAGE: ghcr.io/sol3uk/the-livestream-console
@@ -61,7 +61,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          push: false   # loaded into local daemon first; pushed manually next
+          push: false # loaded into local daemon first; pushed manually next
           load: true
           tags: ${{ env.IMAGE }}:latest
 

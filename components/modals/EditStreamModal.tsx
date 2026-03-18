@@ -1,8 +1,8 @@
 'use client';
+import type { FormattedStream } from '@/lib/types';
+import { toLocalDatetime } from '@/lib/utils';
 import { useState, type FormEvent } from 'react';
 import Modal from './Modal';
-import { toLocalDatetime } from '@/lib/utils';
-import type { FormattedStream } from '@/lib/types';
 
 interface EditStreamModalProps {
   stream: FormattedStream;

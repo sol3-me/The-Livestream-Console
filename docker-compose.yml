@@ -16,9 +16,9 @@ services:
     image: livestream-console:local
     container_name: livestream-console
     ports:
-      - "3000:3000"        # host:container — access at http://localhost:3000
+      - "3000:3000" # host:container — access at http://localhost:3000
     env_file:
-      - .env.local         # loads your local secrets automatically
+      - .env.local # loads your local secrets automatically
     environment:
       - NODE_ENV=production
       - NEXTAUTH_DEBUG=${NEXTAUTH_DEBUG:-0}

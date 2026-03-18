@@ -1,6 +1,6 @@
 import { google, youtube_v3 } from 'googleapis';
-import { streamStatus as STATUS } from './constants';
 import type { StreamStatus } from './constants';
+import { streamStatus as STATUS } from './constants';
 
 const PART = ['snippet', 'contentDetails', 'status'];
 

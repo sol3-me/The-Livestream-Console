@@ -19,7 +19,7 @@ jobs:
     if: |
       github.repository == 'sol3uk/The-Livestream-Console' &&
       github.ref == 'refs/heads/master'
-    runs-on: [self-hosted, TLC-Runner]
+    runs-on: [self-hosted, Linux, X64]
     permissions:
       contents: read
       packages: write   # required to push images to GHCR

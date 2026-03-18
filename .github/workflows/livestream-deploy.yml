@@ -29,6 +29,10 @@ jobs:
       CONTAINER_NAME: livestream-console
       HOST_PORT: "8090"
       CONTAINER_PORT: "3000"
+      # Path as seen inside the runner container.
+      # Host path /mnt/user/appdata/github_runner/persistent_files is mounted at
+      # /runner/persistent_files in myoung34/github-runner.
+      ENV_FILE: /runner/persistent_files/livestream-console/.env.local
 
     steps:
       - name: Checkout repo
@@ -68,6 +72,16 @@ jobs:
       - name: Push :latest to GHCR
         run: docker push ${{ env.IMAGE }}:latest
 
+      - name: Verify env file exists on host
+        run: |
+          if [ ! -f "${{ env.ENV_FILE }}" ]; then
+            echo "ERROR: ${{ env.ENV_FILE }} not found on runner host."
+            echo "Create it in the runner persistent files mount before deploying:"
+            echo "  mkdir -p /runner/persistent_files/livestream-console"
+            echo "  nano /runner/persistent_files/livestream-console/.env.local"
+            exit 1
+          fi
+
       - name: Restart container
         run: |
           docker rm -f "${{ env.CONTAINER_NAME }}" 2>/dev/null || true
@@ -75,10 +89,7 @@ jobs:
             --name "${{ env.CONTAINER_NAME }}" \
             --restart unless-stopped \
             -p "${{ env.HOST_PORT }}:${{ env.CONTAINER_PORT }}" \
-            -e GOOGLE_CLIENT_ID="${{ secrets.GOOGLE_CLIENT_ID }}" \
-            -e GOOGLE_CLIENT_SECRET="${{ secrets.GOOGLE_CLIENT_SECRET }}" \
-            -e NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" \
-            -e NEXTAUTH_URL="${{ secrets.NEXTAUTH_URL }}" \
+            --env-file "${{ env.ENV_FILE }}" \
             "${{ env.IMAGE }}:latest"
 
       - name: Clean up dangling images

@@ -43,7 +43,7 @@ export default function CreateStreamModal({
   };
 
   const inputClass =
-    'w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500';
+    'w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500';
   const labelClass = 'block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1';
 
   return (
@@ -52,16 +52,26 @@ export default function CreateStreamModal({
       onClose={onClose}
       title={isCopy ? 'Copy Stream' : 'Create New Stream'}
       footer={
-        <button
-          type="button"
-          onClick={onClose}
-          className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-        >
-          Cancel
-        </button>
+        <>
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 rounded-lg border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            form="create-stream-form"
+            disabled={loading}
+            className="px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? 'Creating…' : isCopy ? 'Create Copy' : 'Create Stream'}
+          </button>
+        </>
       }
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form id="create-stream-form" onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className={labelClass} htmlFor="create-title">
             Title <span className="text-red-500">*</span>
@@ -103,7 +113,7 @@ export default function CreateStreamModal({
                 ? toDatetimeLocalValue(initialData.startTime)
                 : defaultStartTime()
             }
-            className={inputClass}
+            className={`${inputClass} datetime-input`}
           />
         </div>
 
@@ -144,13 +154,6 @@ export default function CreateStreamModal({
           </label>
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {loading ? 'Creating…' : isCopy ? 'Create Copy' : 'Create Stream'}
-        </button>
       </form>
     </Modal>
   );

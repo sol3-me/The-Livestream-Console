@@ -38,7 +38,7 @@ export default function DashboardActions() {
       )}
       <button
         onClick={() => setIsCreating(true)}
-        className="bg-blue-600 text-white px-6 py-3 rounded-md font-medium hover:bg-blue-700 transition-colors"
+        className="bg-green-600 text-white px-6 py-3 rounded-md font-medium hover:bg-green-700 transition-colors"
       >
         Create Stream
       </button>

@@ -34,7 +34,7 @@ export default function EditStreamModal({
   };
 
   const inputClass =
-    'w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500';
+    'w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500';
   const disabledInputClass =
     'w-full border border-gray-200 dark:border-gray-700 rounded px-3 py-2 text-sm bg-gray-50 dark:bg-gray-900 text-gray-400 dark:text-gray-500';
   const labelClass = 'block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1';
@@ -45,16 +45,26 @@ export default function EditStreamModal({
       onClose={onClose}
       title={`Edit Livestream — ${stream.id}`}
       footer={
-        <button
-          type="button"
-          onClick={onClose}
-          className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-        >
-          Cancel
-        </button>
+        <>
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 rounded-lg border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            form="edit-stream-form"
+            disabled={loading}
+            className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? 'Saving…' : 'Save Changes'}
+          </button>
+        </>
       }
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form id="edit-stream-form" onSubmit={handleSubmit} className="space-y-4">
         <input type="hidden" name="id" value={stream.id} />
 
         <div>
@@ -94,7 +104,7 @@ export default function EditStreamModal({
               type="datetime-local"
               name="startTime"
               defaultValue={toDatetimeLocalValue(stream.startTime)}
-              className={inputClass}
+              className={`${inputClass} datetime-input`}
             />
           ) : (
             <input
@@ -174,14 +184,6 @@ export default function EditStreamModal({
             </label>
           </div>
         )}
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded text-sm font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {loading ? 'Saving…' : 'Save Changes'}
-        </button>
       </form>
     </Modal>
   );

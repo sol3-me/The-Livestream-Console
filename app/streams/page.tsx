@@ -17,15 +17,17 @@ export default async function StreamsPage() {
   let error: StreamsPageError | null = null;
 
   try {
-    const { upcoming, active, last } = await parallelAsync({
-      upcoming: getStreams(session.access_token!, streamStatus.UPCOMING),
+    const { upcoming, active, completed } = await parallelAsync({
+      upcoming: getStreams(session.access_token!, streamStatus.UPCOMING, 50),
       active: getStreams(session.access_token!, streamStatus.ACTIVE, 1),
-      last: getStreams(session.access_token!, streamStatus.COMPLETED, 1),
+      completed: getStreams(session.access_token!, streamStatus.COMPLETED, 50),
     });
+    const formattedCompleted = formatStreams(completed);
     streamsData = {
       active: formatStreams(active),
       upcoming: formatStreams(upcoming),
-      last: formatStreams(last),
+      completed: formattedCompleted,
+      last: formattedCompleted.slice(0, 1),
     };
   } catch (e: unknown) {
     console.error('ERROR - /streams:', e);

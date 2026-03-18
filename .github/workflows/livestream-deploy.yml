@@ -29,9 +29,10 @@ jobs:
       CONTAINER_NAME: livestream-console
       HOST_PORT: "8090"
       CONTAINER_PORT: "3000"
-      # Path to the env file that must exist on the Unraid host.
-      # Create it once on the server — the workflow never touches secrets.
-      ENV_FILE: /opt/tlc/.env.local
+      # Path as seen inside the runner container.
+      # Host path /mnt/user/appdata/github_runner/persistent_files is mounted at
+      # /runner/persistent_files in myoung34/github-runner.
+      ENV_FILE: /runner/persistent_files/livestream-console/.env.local
 
     steps:
       - name: Checkout repo
@@ -75,9 +76,9 @@ jobs:
         run: |
           if [ ! -f "${{ env.ENV_FILE }}" ]; then
             echo "ERROR: ${{ env.ENV_FILE }} not found on runner host."
-            echo "Create it on the Unraid machine before deploying:"
-            echo "  sudo mkdir -p /opt/tlc"
-            echo "  sudo nano /opt/tlc/.env.local"
+            echo "Create it in the runner persistent files mount before deploying:"
+            echo "  mkdir -p /runner/persistent_files/livestream-console"
+            echo "  nano /runner/persistent_files/livestream-console/.env.local"
             exit 1
           fi
 

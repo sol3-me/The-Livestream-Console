@@ -6,6 +6,7 @@ import ErrorDisplay from './ErrorDisplay';
 import StreamCard from './StreamCard';
 import StreamFeatured from './StreamFeatured';
 import StreamTableRow from './StreamTableRow';
+import CreateStreamModal from './modals/CreateStreamModal';
 import DeleteStreamModal from './modals/DeleteStreamModal';
 import EditStreamModal from './modals/EditStreamModal';
 import StopStreamModal from './modals/StopStreamModal';
@@ -26,6 +27,7 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
   const [stoppingStream, setStoppingStream] = useState<FormattedStream | null>(null);
   const [editingStream, setEditingStream] = useState<FormattedStream | null>(null);
   const [deletingStream, setDeletingStream] = useState<FormattedStream | null>(null);
+  const [createStreamData, setCreateStreamData] = useState<Partial<FormattedStream> | null>(null);
   const [view, setView] = useState<ViewMode>('grid');
   const [sortKey, setSortKey] = useState<SortKey>('startTime');
   const [sortDir, setSortDir] = useState<SortDir>('asc');
@@ -135,6 +137,30 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
     }
   }, [deletingStream, router]);
 
+  const handleCreate = useCallback(
+    async (formData: Record<string, string>) => {
+      setLoading(true);
+      try {
+        const res = await fetch('/api/streams/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+        const data = (await res.json()) as { errors?: { message: string }[] };
+        if (!res.ok) throw data;
+        setCreateStreamData(null);
+        router.refresh();
+      } catch (e) {
+        const err = e as { errors?: { message: string }[] };
+        setClientError(err.errors?.[0]?.message ?? 'Failed to create stream.');
+        setCreateStreamData(null);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [router],
+  );
+
   return (
     <div className="py-10">
       <div className="max-w-7xl mx-auto px-4">
@@ -222,6 +248,7 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
                       stream={stream}
                       onEdit={setEditingStream}
                       onDelete={setDeletingStream}
+                      onCopy={setCreateStreamData}
                     />
                   ))}
                 </div>
@@ -260,6 +287,7 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
                           stream={stream}
                           onEdit={setEditingStream}
                           onDelete={setDeletingStream}
+                          onCopy={setCreateStreamData}
                         />
                       ))}
                     </tbody>
@@ -293,6 +321,14 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
           loading={loading}
           onConfirm={handleDelete}
           onClose={() => setDeletingStream(null)}
+        />
+      )}
+      {createStreamData !== null && (
+        <CreateStreamModal
+          initialData={createStreamData}
+          loading={loading}
+          onSubmit={handleCreate}
+          onClose={() => setCreateStreamData(null)}
         />
       )}
     </div>

@@ -6,9 +6,10 @@ interface StreamTableRowProps {
     stream: FormattedStream;
     onEdit: (stream: FormattedStream) => void;
     onDelete: (stream: FormattedStream) => void;
+        onCopy: (stream: FormattedStream) => void;
 }
 
-export default function StreamTableRow({ stream, onEdit, onDelete }: StreamTableRowProps) {
+export default function StreamTableRow({ stream, onEdit, onDelete, onCopy }: StreamTableRowProps) {
     return (
         <tr className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors">
             <td className="py-3 px-4 max-w-[220px]">
@@ -47,6 +48,12 @@ export default function StreamTableRow({ stream, onEdit, onDelete }: StreamTable
                         className="text-xs px-2.5 py-1 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                     >
                         Edit
+                    </button>
+                    <button
+                        onClick={() => onCopy(stream)}
+                        className="text-xs px-2.5 py-1 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                    >
+                        Copy
                     </button>
                     <button
                         onClick={() => onDelete(stream)}

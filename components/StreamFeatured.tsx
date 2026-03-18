@@ -108,6 +108,9 @@ export default function StreamFeatured({ active, last, onStop, onEdit }: StreamF
               <h2 className="text-xl font-semibold mb-2 dark:text-gray-100">{stream.title}</h2>
               <p className="text-gray-500 dark:text-gray-400 text-sm mb-3">{stream.description}</p>
               <p className="text-xs text-gray-400 dark:text-gray-500 mb-1">
+                <strong>Scheduled For:</strong> {toLocalDatetime(stream.startTime)}
+              </p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mb-1">
                 <strong>Start Date:</strong> {toLocalDatetime(stream.actualStartTime)}
               </p>
               <p className="text-xs text-gray-400 dark:text-gray-500 mb-1">
@@ -123,12 +126,6 @@ export default function StreamFeatured({ active, last, onStop, onEdit }: StreamF
                 >
                   View
                 </a>
-                <button
-                  onClick={() => onEdit(stream)}
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                >
-                  Edit
-                </button>
               </div>
             </div>
           </div>

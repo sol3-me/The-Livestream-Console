@@ -6,9 +6,10 @@ interface StreamCardProps {
   stream: FormattedStream;
   onEdit: (stream: FormattedStream) => void;
   onDelete: (stream: FormattedStream) => void;
+  onCopy: (stream: FormattedStream) => void;
 }
 
-export default function StreamCard({ stream, onEdit, onDelete }: StreamCardProps) {
+export default function StreamCard({ stream, onEdit, onDelete, onCopy }: StreamCardProps) {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
       {stream.thumbnail && (
@@ -47,6 +48,12 @@ export default function StreamCard({ stream, onEdit, onDelete }: StreamCardProps
             className="text-xs px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
             Edit
+          </button>
+          <button
+            onClick={() => onCopy(stream)}
+            className="text-xs px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          >
+            Copy
           </button>
           <button
             onClick={() => onDelete(stream)}

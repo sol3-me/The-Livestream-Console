@@ -55,3 +55,43 @@ export async function deleteStream(accessToken: string, streamId: string) {
   const youtube = getYoutubeClient(accessToken);
   return youtube.liveBroadcasts.delete({ id: streamId });
 }
+
+export interface CreateStreamData {
+  title: string;
+  description: string;
+  scheduledStartTime: string;
+  privacyStatus: string;
+  enableAutoStart: boolean;
+  enableAutoStop: boolean;
+}
+
+export async function createStream(accessToken: string, data: CreateStreamData) {
+  const youtube = getYoutubeClient(accessToken);
+  return youtube.liveBroadcasts.insert({
+    part: PART,
+    requestBody: {
+      snippet: {
+        title: data.title,
+        description: data.description,
+        scheduledStartTime: data.scheduledStartTime,
+      },
+      status: {
+        privacyStatus: data.privacyStatus,
+      },
+      contentDetails: {
+        enableAutoStart: data.enableAutoStart,
+        enableAutoStop: data.enableAutoStop,
+        enableDvr: true,
+        enableEmbed: true,
+        recordFromStart: true,
+        enableClosedCaptions: false,
+        enableContentEncryption: false,
+        startWithSlate: false,
+        monitorStream: {
+          enableMonitorStream: true,
+          broadcastStreamDelayMs: 0,
+        },
+      },
+    },
+  });
+}

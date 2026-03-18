@@ -12,6 +12,7 @@ interface StreamCardProps {
 
 export default function StreamCard({ stream, onEdit, onDelete, onCopy }: StreamCardProps) {
   const [copied, setCopied] = useState(false);
+  const showCompletedEmbed = stream.isComplete && !!stream.id;
 
   const handleCopyId = async () => {
     if (!stream.id) return;
@@ -34,7 +35,19 @@ export default function StreamCard({ stream, onEdit, onDelete, onCopy }: StreamC
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
-      {stream.thumbnail && (
+      {showCompletedEmbed ? (
+        <div className="relative w-full pb-[56.25%] h-0 overflow-hidden">
+          <iframe
+            className="absolute top-0 left-0 w-full h-full"
+            loading="lazy"
+            src={`https://www.youtube.com/embed/${stream.id}`}
+            title={`YouTube video player for ${stream.title}`}
+            allow="autoplay; encrypted-media; picture-in-picture"
+            allowFullScreen
+          />
+        </div>
+      ) : (
+        stream.thumbnail && (
         <img
           src={stream.thumbnail.url}
           alt="video thumbnail"
@@ -42,6 +55,7 @@ export default function StreamCard({ stream, onEdit, onDelete, onCopy }: StreamC
           width={stream.thumbnail.width}
           height={stream.thumbnail.height}
         />
+        )
       )}
       <div className="p-4 flex flex-col flex-1">
         <h5 className="font-semibold text-base mb-2 line-clamp-2 dark:text-gray-100">{stream.title}</h5>

@@ -1,15 +1,17 @@
 'use client';
 import type { FormattedStream, StreamsData, StreamsPageError } from '@/lib/types';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import ErrorDisplay from './ErrorDisplay';
 import StreamCard from './StreamCard';
 import StreamFeatured from './StreamFeatured';
 import StreamTableRow from './StreamTableRow';
+import AddToPlaylistModal from './modals/AddToPlaylistModal';
 import CreateStreamModal from './modals/CreateStreamModal';
 import DeleteStreamModal from './modals/DeleteStreamModal';
 import EditStreamModal from './modals/EditStreamModal';
+import Modal from './modals/Modal';
 import StopStreamModal from './modals/StopStreamModal';
 
 type ViewMode = 'grid' | 'table';
@@ -178,6 +180,9 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
     const [completedSortDir, setCompletedSortDir] = useState<SortDir>('desc');
     const [completedPage, setCompletedPage] = useState(1);
     const [uiMounted, setUiMounted] = useState(false);
+    const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+    const [showAddToPlaylist, setShowAddToPlaylist] = useState(false);
+    const [bulkDeleting, setBulkDeleting] = useState(false);
 
     useEffect(() => {
         setStreamsState(streams);
@@ -269,6 +274,57 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
         streamsState.upcoming.length === 0 &&
         streamsState.completed.length === 0;
 
+    const toggleSelect = useCallback((stream: FormattedStream) => {
+        setSelectedIds((prev) => {
+            const next = new Set(prev);
+            if (next.has(stream.id)) {
+                next.delete(stream.id);
+            } else {
+                next.add(stream.id);
+            }
+            return next;
+        });
+    }, []);
+
+    const lastClickedRef = useRef<string | null>(null);
+
+    /** Shift-aware selection handler. Pass the ordered ID list of the visible section. */
+    const handleSelect = useCallback((stream: FormattedStream, orderedIds: string[], e: React.MouseEvent) => {
+        if (e.shiftKey && lastClickedRef.current) {
+            // Prevent text selection when shift-clicking
+            window.getSelection()?.removeAllRanges();
+            const lastIdx = orderedIds.indexOf(lastClickedRef.current);
+            const curIdx = orderedIds.indexOf(stream.id);
+            if (lastIdx !== -1 && curIdx !== -1) {
+                const [start, end] = lastIdx < curIdx ? [lastIdx, curIdx] : [curIdx, lastIdx];
+                setSelectedIds((prev) => {
+                    const next = new Set(prev);
+                    for (let i = start; i <= end; i++) {
+                        next.add(orderedIds[i]);
+                    }
+                    return next;
+                });
+                lastClickedRef.current = stream.id;
+                return;
+            }
+        }
+        lastClickedRef.current = stream.id;
+        toggleSelect(stream);
+    }, [toggleSelect]);
+
+    const clearSelection = useCallback(() => setSelectedIds(new Set()), []);
+
+    const upcomingIds = useMemo(() => pagedUpcoming.map((s) => s.id), [pagedUpcoming]);
+    const completedIds = useMemo(() => pagedCompleted.map((s) => s.id), [pagedCompleted]);
+
+    const selectUpcoming = useCallback((stream: FormattedStream, e: React.MouseEvent) => {
+        handleSelect(stream, upcomingIds, e);
+    }, [handleSelect, upcomingIds]);
+
+    const selectCompleted = useCallback((stream: FormattedStream, e: React.MouseEvent) => {
+        handleSelect(stream, completedIds, e);
+    }, [handleSelect, completedIds]);
+
     const handleStop = useCallback(async () => {
         if (!stoppingStream) return;
         setStopLoading(true);
@@ -353,6 +409,39 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
                 setStreamsState(previous);
             });
     }, [deletingStream, router, streamsState]);
+
+    const handleBulkDelete = useCallback(async () => {
+        if (!streamsState || selectedIds.size === 0) return;
+        const idsToDelete = Array.from(selectedIds);
+        const previous = streamsState;
+        const idSet = new Set(idsToDelete);
+
+        setBulkDeleting(false);
+        clearSelection();
+        setStreamsState({
+            ...previous,
+            active: previous.active.filter((s) => !idSet.has(s.id)),
+            upcoming: previous.upcoming.filter((s) => !idSet.has(s.id)),
+            completed: previous.completed.filter((s) => !idSet.has(s.id)),
+            last: previous.last.filter((s) => !idSet.has(s.id)),
+        });
+
+        const results = await Promise.allSettled(
+            idsToDelete.map((id) =>
+                fetch(`/api/streams/delete/${id}`, { method: 'DELETE' }).then(async (res) => {
+                    if (!res.ok) throw await res.json();
+                }),
+            ),
+        );
+        const failures = results.filter((r) => r.status === 'rejected').length;
+        if (failures > 0) {
+            toast.error(`Failed to delete ${failures} of ${idsToDelete.length} streams`);
+            setStreamsState(previous);
+        } else {
+            toast.success(`Deleted ${idsToDelete.length} stream${idsToDelete.length !== 1 ? 's' : ''}`);
+            router.refresh();
+        }
+    }, [clearSelection, router, selectedIds, streamsState]);
 
     const handleCreate = useCallback(
         async (formData: Record<string, string>) => {
@@ -495,6 +584,8 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
                                                     onEdit={setEditingStream}
                                                     onDelete={setDeletingStream}
                                                     onCopy={setCreateStreamData}
+                                                    selected={selectedIds.has(stream.id)}
+                                                    onSelect={selectUpcoming}
                                                 />
                                             ))}
                                         </div>
@@ -503,6 +594,7 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
                                             <table className="w-full text-sm">
                                                 <thead className="bg-gray-50 dark:bg-gray-800 text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                                                     <tr>
+                                                        <th className="py-2.5 px-4 w-10"></th>
                                                         {(
                                                             [
                                                                 { key: 'title', label: 'Title' },
@@ -535,6 +627,8 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
                                                             onEdit={setEditingStream}
                                                             onDelete={setDeletingStream}
                                                             onCopy={setCreateStreamData}
+                                                            selected={selectedIds.has(stream.id)}
+                                                            onSelect={selectUpcoming}
                                                         />
                                                     ))}
                                                 </tbody>
@@ -608,6 +702,8 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
                                                     onEdit={setEditingStream}
                                                     onDelete={setDeletingStream}
                                                     onCopy={setCreateStreamData}
+                                                    selected={selectedIds.has(stream.id)}
+                                                    onSelect={selectCompleted}
                                                 />
                                             ))}
                                         </div>
@@ -616,6 +712,7 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
                                             <table className="w-full text-sm">
                                                 <thead className="bg-gray-50 dark:bg-gray-800 text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                                                     <tr>
+                                                        <th className="py-2.5 px-4 w-10"></th>
                                                         {(
                                                             [
                                                                 { key: 'title', label: 'Title' },
@@ -648,6 +745,8 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
                                                             onEdit={setEditingStream}
                                                             onDelete={setDeletingStream}
                                                             onCopy={setCreateStreamData}
+                                                            selected={selectedIds.has(stream.id)}
+                                                            onSelect={selectCompleted}
                                                         />
                                                     ))}
                                                 </tbody>
@@ -692,6 +791,37 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
                     onClose={() => setDeletingStream(null)}
                 />
             )}
+            {bulkDeleting && selectedIds.size > 0 && (
+                <Modal
+                    open={true}
+                    onClose={() => setBulkDeleting(false)}
+                    title="Delete Livestreams?"
+                    footer={
+                        <>
+                            <button
+                                onClick={() => setBulkDeleting(false)}
+                                className="px-4 py-2 rounded-lg border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 dark:border-red-900 dark:bg-red-950/40 dark:text-red-300 dark:hover:bg-red-950/60 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleBulkDelete}
+                                className="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors"
+                            >
+                                Yes, I&apos;m sure &mdash; DELETE
+                            </button>
+                        </>
+                    }
+                >
+                    <div className="text-center">
+                        <p className="mb-6">
+                            This will permanently <strong>DELETE</strong>{' '}
+                            <strong>{selectedIds.size}</strong> livestream{selectedIds.size !== 1 ? 's' : ''}.
+                            This action cannot be undone.
+                        </p>
+                    </div>
+                </Modal>
+            )}
             {createStreamData !== null && (
                 <CreateStreamModal
                     initialData={createStreamData}
@@ -699,6 +829,45 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
                     onSubmit={handleCreate}
                     onClose={() => setCreateStreamData(null)}
                 />
+            )}
+            {showAddToPlaylist && selectedIds.size > 0 && (
+                <AddToPlaylistModal
+                    videoIds={Array.from(selectedIds)}
+                    onClose={() => setShowAddToPlaylist(false)}
+                    onSuccess={() => {
+                        setShowAddToPlaylist(false);
+                        clearSelection();
+                    }}
+                />
+            )}
+            {selectedIds.size > 0 && (
+                <div className="fixed bottom-0 inset-x-0 z-40 bg-blue-600 text-white shadow-lg">
+                    <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+                        <span className="text-sm font-medium">
+                            {selectedIds.size} stream{selectedIds.size !== 1 ? 's' : ''} selected
+                        </span>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setShowAddToPlaylist(true)}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md bg-white text-blue-700 hover:bg-blue-50 font-medium transition-colors"
+                            >
+                                Add to Playlist
+                            </button>
+                            <button
+                                onClick={() => setBulkDeleting(true)}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md bg-red-500 text-white hover:bg-red-600 font-medium transition-colors"
+                            >
+                                Delete
+                            </button>
+                            <button
+                                onClick={clearSelection}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md border border-white/40 hover:bg-blue-700 transition-colors"
+                            >
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );

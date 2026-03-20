@@ -34,3 +34,23 @@ export interface StreamsPageError {
   helpLink?: string;
   code?: number;
 }
+
+export interface FormattedPlaylist {
+  id: string;
+  title: string;
+  description: string;
+  thumbnail?: StreamThumbnail;
+  itemCount: number;
+  privacyStatus: string;
+  publishedAt: string;
+}
+
+export interface PlaylistItem {
+  id: string;
+  videoId: string;
+  title: string;
+  description: string;
+  thumbnail?: StreamThumbnail;
+  position: number;
+  publishedAt: string;
+}

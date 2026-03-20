@@ -2,6 +2,7 @@
 import type { FormattedStream } from '@/lib/types';
 import { toDatetimeLocalValue, toLocalDatetime } from '@/lib/utils';
 import { useState, type FormEvent } from 'react';
+import PlaylistMultiSelect from '../PlaylistMultiSelect';
 import Modal from './Modal';
 
 interface EditStreamModalProps {
@@ -19,6 +20,7 @@ export default function EditStreamModal({
 }: EditStreamModalProps) {
   const [autoStart, setAutoStart] = useState(stream.enableAutoStart);
   const [autoStop, setAutoStop] = useState(stream.enableAutoStop);
+  const [playlistIds, setPlaylistIds] = useState<string[]>([]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,6 +32,9 @@ export default function EditStreamModal({
     });
     obj.autoStart = String(autoStart);
     obj.autoStop = String(autoStop);
+    if (playlistIds.length > 0) {
+      obj.playlistIds = JSON.stringify(playlistIds);
+    }
     onSubmit(obj);
   };
 
@@ -184,6 +189,15 @@ export default function EditStreamModal({
             </label>
           </div>
         )}
+
+        <div>
+          <label className={labelClass}>Add to Playlists</label>
+          <PlaylistMultiSelect
+            selectedIds={playlistIds}
+            onChange={setPlaylistIds}
+            videoId={stream.id}
+          />
+        </div>
       </form>
     </Modal>
   );

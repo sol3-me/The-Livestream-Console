@@ -8,9 +8,11 @@ interface StreamCardProps {
   onEdit: (stream: FormattedStream) => void;
   onDelete: (stream: FormattedStream) => void;
   onCopy: (stream: FormattedStream) => void;
+  selected?: boolean;
+  onSelect?: (stream: FormattedStream, e: React.MouseEvent) => void;
 }
 
-export default function StreamCard({ stream, onEdit, onDelete, onCopy }: StreamCardProps) {
+export default function StreamCard({ stream, onEdit, onDelete, onCopy, selected, onSelect }: StreamCardProps) {
   const [copied, setCopied] = useState(false);
   const showCompletedEmbed = stream.isComplete && !!stream.id;
 
@@ -34,7 +36,23 @@ export default function StreamCard({ stream, onEdit, onDelete, onCopy }: StreamC
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
+    <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-sm border overflow-hidden flex flex-col ${selected ? 'border-blue-500 ring-2 ring-blue-500/30' : 'border-gray-200 dark:border-gray-700'}`}>
+      {onSelect && (
+        <div className="px-4 pt-3 pb-0">
+          <label
+            className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 cursor-pointer select-none"
+            onClick={(e) => { e.preventDefault(); onSelect(stream, e); }}
+          >
+            <input
+              type="checkbox"
+              checked={selected ?? false}
+              readOnly
+              className="h-4 w-4 rounded border-gray-300 dark:border-gray-500 accent-blue-600 pointer-events-none"
+            />
+            Select
+          </label>
+        </div>
+      )}
       {showCompletedEmbed ? (
         <div className="relative w-full pb-[56.25%] h-0 overflow-hidden">
           <iframe
@@ -48,13 +66,13 @@ export default function StreamCard({ stream, onEdit, onDelete, onCopy }: StreamC
         </div>
       ) : (
         stream.thumbnail && (
-        <img
-          src={stream.thumbnail.url}
-          alt="video thumbnail"
-          className="w-full object-cover"
-          width={stream.thumbnail.width}
-          height={stream.thumbnail.height}
-        />
+          <img
+            src={stream.thumbnail.url}
+            alt="video thumbnail"
+            className="w-full object-cover"
+            width={stream.thumbnail.width}
+            height={stream.thumbnail.height}
+          />
         )
       )}
       <div className="p-4 flex flex-col flex-1">

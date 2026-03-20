@@ -7,11 +7,23 @@ interface StreamTableRowProps {
     onEdit: (stream: FormattedStream) => void;
     onDelete: (stream: FormattedStream) => void;
     onCopy: (stream: FormattedStream) => void;
+    selected?: boolean;
+    onSelect?: (stream: FormattedStream, e: React.MouseEvent) => void;
 }
 
-export default function StreamTableRow({ stream, onEdit, onDelete, onCopy }: StreamTableRowProps) {
+export default function StreamTableRow({ stream, onEdit, onDelete, onCopy, selected, onSelect }: StreamTableRowProps) {
     return (
-        <tr className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors">
+        <tr className={`border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/60 transition-colors ${selected ? 'bg-blue-50 dark:bg-blue-950/20' : ''}`}>
+            {onSelect && (
+                <td className="py-3 px-4 w-10" onClick={(e) => onSelect(stream, e)}>
+                    <input
+                        type="checkbox"
+                        checked={selected ?? false}
+                        readOnly
+                        className="h-4 w-4 rounded border-gray-300 dark:border-gray-500 accent-blue-600 pointer-events-none"
+                    />
+                </td>
+            )}
             <td className="py-3 px-4 max-w-[220px]">
                 <a
                     href={stream.videoLink}

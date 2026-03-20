@@ -2,6 +2,7 @@
 import type { FormattedStream } from '@/lib/types';
 import { toDatetimeLocalValue } from '@/lib/utils';
 import { useState, type FormEvent } from 'react';
+import PlaylistMultiSelect from '../PlaylistMultiSelect';
 import Modal from './Modal';
 
 interface CreateStreamModalProps {
@@ -26,6 +27,7 @@ export default function CreateStreamModal({
 }: CreateStreamModalProps) {
     const [autoStart, setAutoStart] = useState(initialData?.enableAutoStart ?? true);
     const [autoStop, setAutoStop] = useState(initialData?.enableAutoStop ?? true);
+    const [playlistIds, setPlaylistIds] = useState<string[]>([]);
 
     const isCopy = !!initialData?.id;
 
@@ -39,6 +41,9 @@ export default function CreateStreamModal({
         });
         obj.autoStart = String(autoStart);
         obj.autoStop = String(autoStop);
+        if (playlistIds.length > 0) {
+            obj.playlistIds = JSON.stringify(playlistIds);
+        }
         onSubmit(obj);
     };
 
@@ -152,6 +157,15 @@ export default function CreateStreamModal({
                         />
                         auto-stop
                     </label>
+                </div>
+
+                <div>
+                    <label className={labelClass}>Add to Playlists</label>
+                    <PlaylistMultiSelect
+                        selectedIds={playlistIds}
+                        onChange={setPlaylistIds}
+                        videoId={isCopy ? initialData?.id : undefined}
+                    />
                 </div>
 
             </form>

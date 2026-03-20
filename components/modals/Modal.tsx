@@ -30,6 +30,7 @@ export default function Modal({ open, onClose, title, children, footer }: ModalP
       onClick={(e) => e.target === overlayRef.current && onClose()}
     >
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
+
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
           <h5 className="text-base font-semibold dark:text-gray-100">{title}</h5>
           <button

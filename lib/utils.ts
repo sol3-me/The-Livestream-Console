@@ -1,4 +1,4 @@
-import type { FormattedStream } from './types';
+import type { FormattedPlaylist, FormattedStream, PlaylistItem } from './types';
 
 export async function parallelAsync<T extends Record<string, Promise<unknown>>>(
   parallelRequests: T,
@@ -61,4 +61,42 @@ export function toDatetimeLocalValue(dateStr?: string): string {
   } catch {
     return '';
   }
+}
+
+export function formatPlaylists(raw: unknown[]): FormattedPlaylist[] {
+  return raw.map((item) => {
+    const o = item as Record<string, unknown>;
+    const snippet = o.snippet as Record<string, unknown>;
+    const contentDetails = o.contentDetails as Record<string, unknown>;
+    const status = o.status as Record<string, unknown>;
+    const thumbnails = snippet.thumbnails as Record<string, unknown> | undefined;
+    return {
+      id: o.id as string,
+      title: snippet.title as string,
+      description: (snippet.description as string) ?? '',
+      thumbnail: (thumbnails?.medium ?? thumbnails?.default) as FormattedPlaylist['thumbnail'],
+      itemCount: (contentDetails?.itemCount as number) ?? 0,
+      privacyStatus: (status?.privacyStatus as string) ?? 'private',
+      publishedAt: snippet.publishedAt as string,
+    };
+  });
+}
+
+export function formatPlaylistItems(raw: unknown[]): PlaylistItem[] {
+  return raw.map((item) => {
+    const o = item as Record<string, unknown>;
+    const snippet = o.snippet as Record<string, unknown>;
+    const contentDetails = o.contentDetails as Record<string, unknown>;
+    const thumbnails = snippet.thumbnails as Record<string, unknown> | undefined;
+    const resourceId = snippet.resourceId as Record<string, unknown> | undefined;
+    return {
+      id: o.id as string,
+      videoId: (resourceId?.videoId as string) ?? (contentDetails?.videoId as string) ?? '',
+      title: snippet.title as string,
+      description: (snippet.description as string) ?? '',
+      thumbnail: (thumbnails?.medium ?? thumbnails?.default) as PlaylistItem['thumbnail'],
+      position: (snippet.position as number) ?? 0,
+      publishedAt: snippet.publishedAt as string,
+    };
+  });
 }

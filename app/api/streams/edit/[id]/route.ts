@@ -1,4 +1,5 @@
 import { authOptions } from '@/lib/authOptions';
+import { addToPlaylist } from '@/lib/playlists';
 import { Stream, type StreamRequest, type YouTubeStreamData } from '@/lib/stream';
 import { editStream, getStreamById } from '@/lib/youtube';
 import { getServerSession } from 'next-auth';
@@ -13,7 +14,7 @@ export async function POST(
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   try {
-    const body = (await req.json()) as StreamRequest;
+    const body = (await req.json()) as StreamRequest & { playlistIds?: string };
     const apiStream = await getStreamById(session.access_token, body.id);
     const ytStreamData = apiStream.data.items?.[0];
     if (!ytStreamData) {
@@ -21,6 +22,17 @@ export async function POST(
     }
     const streamForAPI = new Stream(body, ytStreamData as unknown as YouTubeStreamData);
     await editStream(session.access_token, streamForAPI);
+
+    // Add to selected playlists
+    if (body.playlistIds) {
+      try {
+        const ids: string[] = JSON.parse(body.playlistIds);
+        await Promise.allSettled(
+          ids.map((pid) => addToPlaylist(session.access_token!, pid, body.id)),
+        );
+      } catch { /* playlist add is best-effort */ }
+    }
+
     return NextResponse.json({ redirectUrl: '/streams' });
   } catch (e) {
     console.error('ERROR EDITING:', e);

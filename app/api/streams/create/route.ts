@@ -1,4 +1,5 @@
 import { authOptions } from '@/lib/authOptions';
+import { addToPlaylist } from '@/lib/playlists';
 import { createStream } from '@/lib/youtube';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
@@ -10,6 +11,7 @@ interface CreateStreamBody {
     privacyStatus?: string;
     autoStart?: string;
     autoStop?: string;
+    playlistIds?: string;
 }
 
 export async function POST(req: NextRequest) {
@@ -26,7 +28,7 @@ export async function POST(req: NextRequest) {
             ? body.startTime
             : new Date(body.startTime).toISOString();
 
-        await createStream(session.access_token, {
+        const result = await createStream(session.access_token, {
             title: body.title.trim(),
             description: body.description ?? '',
             scheduledStartTime,
@@ -34,6 +36,19 @@ export async function POST(req: NextRequest) {
             enableAutoStart: body.autoStart === 'true',
             enableAutoStop: body.autoStop === 'true',
         });
+
+        const videoId = result.data.id;
+
+        // Add to selected playlists
+        if (videoId && body.playlistIds) {
+            try {
+                const ids: string[] = JSON.parse(body.playlistIds);
+                await Promise.allSettled(
+                    ids.map((pid) => addToPlaylist(session.access_token!, pid, videoId)),
+                );
+            } catch { /* playlist add is best-effort */ }
+        }
+
         return NextResponse.json({ redirectUrl: '/streams' });
     } catch (e) {
         console.error('ERROR CREATING:', e);

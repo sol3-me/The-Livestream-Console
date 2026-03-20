@@ -82,6 +82,11 @@ export default function Navbar() {
                   Streams
                 </Link>
               )}
+              {isLoggedIn && (
+                <Link href="/playlists" className={linkClass('/playlists')}>
+                  Playlists
+                </Link>
+              )}
               <Link href="/about" className={linkClass('/about')}>
                 About
               </Link>

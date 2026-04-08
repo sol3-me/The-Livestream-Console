@@ -108,3 +108,4 @@ dist
 public/css/main.css.map
 public/css/main.css
 .env.local
+.env.OLD

@@ -25,7 +25,7 @@ jobs:
       packages: write # required to push images to GHCR
 
     env:
-      IMAGE: ghcr.io/sol3uk/the-livestream-console
+      IMAGE: ghcr.io/sol3-me/the-livestream-console
       CONTAINER_NAME: livestream-console
       HOST_PORT: "8090"
       CONTAINER_PORT: "3000"

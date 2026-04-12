@@ -11,6 +11,9 @@ jobs:
     if: |
       github.event.pull_request.merged == true &&
       github.repository == 'sol3-me/The-Livestream-Console'
+    concurrency:
+      group: auto-release
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     permissions:
       contents: write # required to push tags and create releases

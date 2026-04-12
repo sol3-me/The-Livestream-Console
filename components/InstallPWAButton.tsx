@@ -71,12 +71,19 @@ export default function InstallPWAButton({ className = '', dropdownItem = false 
 
   const handleClick = async () => {
     if (deferredPrompt) {
-      await deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'accepted') {
-        setInstalled(true);
+      const promptEvent = deferredPrompt;
+
+      try {
+        await promptEvent.prompt();
+        const { outcome } = await promptEvent.userChoice;
+        if (outcome === 'accepted') {
+          setInstalled(true);
+        }
+      } catch {
+        setShowModal(true);
+      } finally {
+        setDeferredPrompt(null);
       }
-      setDeferredPrompt(null);
     } else {
       setShowModal(true);
     }

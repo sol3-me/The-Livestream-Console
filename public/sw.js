@@ -65,7 +65,9 @@ self.addEventListener('fetch', (event) => {
         // Cache successful same-origin static asset responses for future offline use.
         if (response.ok) {
           const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          event.waitUntil(
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone))
+          );
         }
         return response;
       })

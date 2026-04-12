@@ -57,6 +57,7 @@ jobs:
         if: steps.label.outputs.bump != 'none'
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
           fetch-depth: 0 # full history so we can read all tags
 
       - name: Compute next version

@@ -37,16 +37,33 @@ self.addEventListener('fetch', (event) => {
   // Only handle GET requests; let mutations (POST, PUT, DELETE) pass through.
   if (request.method !== 'GET') return;
 
-  // For API and auth routes, always go to the network (never serve stale data).
   const url = new URL(request.url);
-  if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/auth/')) return;
+  const isSameOrigin = url.origin === self.location.origin;
+  const isNavigationRequest =
+    request.mode === 'navigate' || request.destination === 'document';
+  const isRuntimeCacheableAsset =
+    isSameOrigin &&
+    (url.pathname.startsWith('/_next/static/') || url.pathname.startsWith('/icons/'));
 
-  // Network-first strategy: try network, fall back to cache.
+  // Never cache API/auth routes or navigations/documents, which may contain
+  // authenticated or user-specific HTML/RSC content.
+  if (
+    url.pathname.startsWith('/api/') ||
+    url.pathname.startsWith('/auth/') ||
+    isNavigationRequest
+  ) {
+    return;
+  }
+
+  // Only apply runtime caching to known static assets.
+  if (!isRuntimeCacheableAsset) return;
+
+  // Network-first strategy for static assets: try network, fall back to cache.
   event.respondWith(
     fetch(request)
       .then((response) => {
-        // Cache successful same-origin responses for future offline use.
-        if (response.ok && url.origin === self.location.origin) {
+        // Cache successful same-origin static asset responses for future offline use.
+        if (response.ok) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
         }

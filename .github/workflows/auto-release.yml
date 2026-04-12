@@ -1,0 +1,131 @@
+name: Auto Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [master]
+
+jobs:
+  release:
+    # Only run when the PR was actually merged, on the canonical repo.
+    if: |
+      github.event.pull_request.merged == true &&
+      github.repository == 'sol3-me/The-Livestream-Console'
+    concurrency:
+      group: auto-release
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # required to push tags and create releases
+
+    steps:
+      - name: Detect release label
+        id: label
+        env:
+          LABELS: ${{ toJson(github.event.pull_request.labels.*.name) }}
+        run: |
+          has_major=false
+          has_minor=false
+          has_patch=false
+
+          while IFS= read -r label; do
+            case "$label" in
+              release:major) has_major=true ;;
+              release:minor) has_minor=true ;;
+              release:patch) has_patch=true ;;
+            esac
+          done < <(echo "$LABELS" | jq -r '.[]')
+
+          count=0
+          [ "$has_major" = "true" ] && count=$((count + 1))
+          [ "$has_minor" = "true" ] && count=$((count + 1))
+          [ "$has_patch" = "true" ] && count=$((count + 1))
+          if [ "$count" -gt 1 ]; then
+            echo "::error::Multiple release labels found (release:major / release:minor / release:patch)."
+            echo "::error::Please keep exactly one release label on the PR and re-run the workflow."
+            exit 1
+          fi
+
+          if   [ "$has_major" = "true" ]; then echo "bump=major" >> "$GITHUB_OUTPUT"
+          elif [ "$has_minor" = "true" ]; then echo "bump=minor" >> "$GITHUB_OUTPUT"
+          elif [ "$has_patch" = "true" ]; then echo "bump=patch" >> "$GITHUB_OUTPUT"
+          else echo "bump=none"  >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip — no release label
+        if: steps.label.outputs.bump == 'none'
+        run: echo "No release label on this PR — skipping release."
+
+      - name: Checkout repo
+        if: steps.label.outputs.bump != 'none'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.merge_commit_sha }}
+          fetch-depth: 0 # full history so we can read all tags
+
+      - name: Compute next version
+        if: steps.label.outputs.bump != 'none'
+        id: version
+        run: |
+          bump="${{ steps.label.outputs.bump }}"
+
+          # Find the latest vX.Y.Z tag (annotated or lightweight).
+          latest=$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' \
+                    | sort -V | tail -n1)
+
+          if [ -z "$latest" ]; then
+            # No previous tag — start at v0.0.0 before applying bump.
+            major=0; minor=0; patch=0
+          else
+            # Strip leading 'v' then split on '.'.
+            version="${latest#v}"
+            major="${version%%.*}"; rest="${version#*.}"
+            minor="${rest%%.*}"; patch="${rest#*.}"
+          fi
+
+          case "$bump" in
+            major) major=$((major + 1)); minor=0; patch=0 ;;
+            minor) minor=$((minor + 1)); patch=0 ;;
+            patch) patch=$((patch + 1)) ;;
+          esac
+
+          next="v${major}.${minor}.${patch}"
+          echo "tag=${next}" >> "$GITHUB_OUTPUT"
+          echo "Computed next version: ${next} (bump: ${bump}, previous: ${latest:-none})"
+
+      - name: Create and push annotated tag
+        if: steps.label.outputs.bump != 'none'
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+            echo "Error: tag '$TAG' already exists on the remote. This can happen when the workflow is re-run after a partial failure."
+            exit 1
+          fi
+          git tag -a "$TAG" -m "${TAG} — ${PR_TITLE}" "${{ github.event.pull_request.merge_commit_sha }}"
+          git push origin "$TAG"
+
+      - name: Create GitHub Release
+        if: steps.label.outputs.bump != 'none'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const tag     = '${{ steps.version.outputs.tag }}';
+            const prTitle = context.payload.pull_request.title;
+            const title   = `${tag} — ${prTitle}`;
+
+            await github.rest.repos.createRelease({
+              owner:                  context.repo.owner,
+              repo:                   context.repo.repo,
+              tag_name:               tag,
+              name:                   title,
+              generate_release_notes: true,
+              draft:                  false,
+              prerelease:             false,
+            });
+
+            core.info(`Release ${tag} published successfully.`);

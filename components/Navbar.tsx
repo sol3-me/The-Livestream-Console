@@ -58,9 +58,13 @@ export default function Navbar() {
     };
 
     const handleOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
+      const target = e.target as Node;
+
+      if (menuRef.current?.contains(target) || toggleRef.current?.contains(target)) {
+        return;
       }
+
+      setMenuOpen(false);
     };
 
     document.addEventListener('keydown', handleKey);

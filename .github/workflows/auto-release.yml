@@ -101,6 +101,11 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+            echo "Error: tag '$TAG' already exists on the remote. This can happen when the workflow is re-run after a partial failure."
+            exit 1
+          fi
           git tag -a "$TAG" -m "${TAG} — ${PR_TITLE}" "${{ github.event.pull_request.merge_commit_sha }}"
           git push origin "$TAG"
 

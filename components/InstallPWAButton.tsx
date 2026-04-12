@@ -157,7 +157,7 @@ export default function InstallPWAButton({ className = '', dropdownItem = false 
                 <li>
                   Tap the{' '}
                   <span className="font-medium">Share</span> button{' '}
-                  <span aria-hidden="true">⎋</span> at the bottom of Safari.
+                  <span aria-hidden="true">⬆</span> at the bottom of Safari.
                 </li>
                 <li>
                   Scroll down and tap{' '}

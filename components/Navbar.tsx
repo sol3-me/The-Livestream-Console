@@ -265,11 +265,7 @@ export default function Navbar() {
                   Release: {releaseLabel}
                 </a>
                 <div className="border-t border-gray-700 mt-1 pt-1">
-                  {isAuthLoading ? (
-                    <div className="px-4 py-2">
-                      <div className="h-7 w-20 bg-gray-700 rounded animate-pulse" />
-                    </div>
-                  ) : isLoggedIn ? (
+                  {isLoggedIn ? (
                     <button
                       onClick={() => signOut({ callbackUrl: '/' })}
                       className="flex w-full items-center px-4 py-2 text-sm text-red-400 hover:bg-gray-700 transition-colors"

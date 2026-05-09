@@ -1,7 +1,7 @@
 'use client';
-import type { FormattedStream } from '@/lib/types';
+import type { AvailableStreamKey, FormattedStream } from '@/lib/types';
 import { toDatetimeLocalValue } from '@/lib/utils';
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import PlaylistMultiSelect from '../PlaylistMultiSelect';
 import Modal from './Modal';
 
@@ -28,6 +28,20 @@ export default function CreateStreamModal({
     const [autoStart, setAutoStart] = useState(initialData?.enableAutoStart ?? true);
     const [autoStop, setAutoStop] = useState(initialData?.enableAutoStop ?? true);
     const [playlistIds, setPlaylistIds] = useState<string[]>([]);
+    const [availableKeys, setAvailableKeys] = useState<AvailableStreamKey[]>([]);
+    const [keysLoading, setKeysLoading] = useState(false);
+    const [selectedKeyId, setSelectedKeyId] = useState('');
+
+    useEffect(() => {
+        setKeysLoading(true);
+        fetch('/api/streams/keys')
+            .then(async (res) => {
+                if (!res.ok) return;
+                setAvailableKeys((await res.json()) as AvailableStreamKey[]);
+            })
+            .catch(() => {})
+            .finally(() => setKeysLoading(false));
+    }, []);
 
     const isCopy = !!initialData?.id;
 
@@ -44,6 +58,7 @@ export default function CreateStreamModal({
         if (playlistIds.length > 0) {
             obj.playlistIds = JSON.stringify(playlistIds);
         }
+        if (selectedKeyId) obj.streamKeyId = selectedKeyId;
         onSubmit(obj);
     };
 
@@ -136,6 +151,30 @@ export default function CreateStreamModal({
                         <option value="unlisted">Unlisted</option>
                         <option value="private">Private</option>
                     </select>
+                </div>
+
+                <div>
+                    <label className={labelClass} htmlFor="create-stream-key">
+                        Stream Key{' '}
+                        <span className="text-gray-400 dark:text-gray-500 text-xs font-normal">(optional)</span>
+                    </label>
+                    {keysLoading ? (
+                        <div className="h-9 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+                    ) : (
+                        <select
+                            id="create-stream-key"
+                            value={selectedKeyId}
+                            onChange={(e) => setSelectedKeyId(e.target.value)}
+                            className={inputClass}
+                        >
+                            <option value="">— select a stream key —</option>
+                            {availableKeys.map((k) => (
+                                <option key={k.id} value={k.id}>
+                                    {k.name}{k.resolution ? ` · ${k.resolution}` : ''}
+                                </option>
+                            ))}
+                        </select>
+                    )}
                 </div>
 
                 <div className="flex gap-6">

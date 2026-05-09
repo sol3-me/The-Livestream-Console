@@ -1,6 +1,6 @@
 import { authOptions } from '@/lib/authOptions';
 import { addToPlaylist } from '@/lib/playlists';
-import { createStream } from '@/lib/youtube';
+import { bindBroadcastToStream, createStream } from '@/lib/youtube';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -12,6 +12,7 @@ interface CreateStreamBody {
     autoStart?: string;
     autoStop?: string;
     playlistIds?: string;
+    streamKeyId?: string;
 }
 
 export async function POST(req: NextRequest) {
@@ -38,6 +39,13 @@ export async function POST(req: NextRequest) {
         });
 
         const videoId = result.data.id;
+
+        // Bind to stream key if requested
+        if (videoId && body.streamKeyId) {
+            try {
+                await bindBroadcastToStream(session.access_token, videoId, body.streamKeyId);
+            } catch { /* key binding is best-effort */ }
+        }
 
         // Add to selected playlists
         if (videoId && body.playlistIds) {

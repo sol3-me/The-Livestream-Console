@@ -3,7 +3,7 @@ import { authOptions } from '@/lib/authOptions';
 import { streamStatus } from '@/lib/constants';
 import type { StreamsData, StreamsPageError } from '@/lib/types';
 import { formatStreams, parallelAsync } from '@/lib/utils';
-import { getStreams } from '@/lib/youtube';
+import { getLiveStreamsByIds, getStreams } from '@/lib/youtube';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 
@@ -22,10 +22,26 @@ export default async function StreamsPage() {
       active: getStreams(session.access_token!, streamStatus.ACTIVE, 1),
       completed: getStreams(session.access_token!, streamStatus.COMPLETED, 50),
     });
-    const formattedCompleted = formatStreams(completed);
+
+    // Collect all bound stream IDs and batch-fetch their names in one call
+    type BroadcastItem = { contentDetails?: { boundStreamId?: string } };
+    const allItems = [
+      ...((active as { data?: { items?: BroadcastItem[] } }).data?.items ?? []),
+      ...((upcoming as { data?: { items?: BroadcastItem[] } }).data?.items ?? []),
+      ...((completed as { data?: { items?: BroadcastItem[] } }).data?.items ?? []),
+    ];
+    const boundStreamIds = Array.from(
+      new Set(
+        allItems.map((i) => i.contentDetails?.boundStreamId).filter((id): id is string => !!id),
+      ),
+    );
+    const liveStreamItems = await getLiveStreamsByIds(session.access_token!, boundStreamIds);
+    const streamKeyNameMap = new Map(liveStreamItems.map((s) => [s.id!, s.snippet?.title ?? '']));
+
+    const formattedCompleted = formatStreams(completed, streamKeyNameMap);
     streamsData = {
-      active: formatStreams(active),
-      upcoming: formatStreams(upcoming),
+      active: formatStreams(active, streamKeyNameMap),
+      upcoming: formatStreams(upcoming, streamKeyNameMap),
       completed: formattedCompleted,
       last: formattedCompleted.slice(0, 1),
     };

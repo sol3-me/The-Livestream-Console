@@ -14,6 +14,7 @@ import EditStreamModal from './modals/EditStreamModal';
 import Modal from './modals/Modal';
 import StopStreamModal from './modals/StopStreamModal';
 
+
 type ViewMode = 'grid' | 'table';
 type SortKey = 'title' | 'startTime' | 'privacyStatus' | 'enableAutoStart' | 'enableAutoStop';
 type SortDir = 'asc' | 'desc';
@@ -169,6 +170,7 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
     const [deletingStream, setDeletingStream] = useState<FormattedStream | null>(null);
     const [createStreamData, setCreateStreamData] = useState<Partial<FormattedStream> | null>(null);
     const [streamsState, setStreamsState] = useState<StreamsData | null>(streams);
+
 
     const [upcomingView, setUpcomingView] = useState<ViewMode>('grid');
     const [upcomingSortKey, setUpcomingSortKey] = useState<SortKey>('startTime');
@@ -518,6 +520,13 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
                                                 {streamsState.upcoming.length}
                                             </span>
                                         </h1>
+                                        <div className="flex items-center gap-2">
+                                        <button
+                                            onClick={() => setCreateStreamData({})}
+                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors font-medium"
+                                        >
+                                            + Create Stream
+                                        </button>
                                         {uiMounted ? (
                                             <div className="flex items-center gap-1 border border-gray-200 dark:border-gray-700 rounded-md p-0.5">
                                                 <button
@@ -547,6 +556,7 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
                                                 <div className="w-7 h-7 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
                                             </div>
                                         )}
+                                        </div>
                                     </div>
                                     <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">10 items per page</p>
 
@@ -615,8 +625,7 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
                                                                     <span className="ml-1 text-blue-500">{upcomingSortDir === 'asc' ? '↑' : '↓'}</span>
                                                                 )}
                                                             </th>
-                                                        ))}
-                                                        <th className="py-2.5 px-4 text-right">Actions</th>
+                                                        ))}                                                        <th className="py-2.5 px-4 text-left">Stream Key</th>                                                        <th className="py-2.5 px-4 text-right">Actions</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-900">
@@ -734,6 +743,7 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
                                                                 )}
                                                             </th>
                                                         ))}
+                                                        <th className="py-2.5 px-4 text-left">Stream Key</th>
                                                         <th className="py-2.5 px-4 text-right">Actions</th>
                                                     </tr>
                                                 </thead>

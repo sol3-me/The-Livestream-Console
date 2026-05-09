@@ -14,7 +14,7 @@ export async function parallelAsync<T extends Record<string, Promise<unknown>>>(
   );
 }
 
-export function formatStreams(livestreams: unknown): FormattedStream[] {
+export function formatStreams(livestreams: unknown, streamKeyNames?: Map<string, string>): FormattedStream[] {
   const data = livestreams as { data?: { items?: unknown[] } };
   if (!data?.data?.items) return [];
   return (data.data.items as Record<string, unknown>[]).map((o) => {
@@ -22,6 +22,7 @@ export function formatStreams(livestreams: unknown): FormattedStream[] {
     const contentDetails = o.contentDetails as Record<string, unknown>;
     const status = o.status as Record<string, unknown>;
     const thumbnails = snippet.thumbnails as Record<string, unknown> | undefined;
+    const boundStreamId = (contentDetails.boundStreamId as string | undefined) ?? undefined;
     return {
       id: o.id as string,
       title: snippet.title as string,
@@ -38,6 +39,8 @@ export function formatStreams(livestreams: unknown): FormattedStream[] {
       privacyStatus: status.privacyStatus as string,
       videoLink: `https://www.youtube.com/watch?v=${o.id}`,
       controlRoomLink: `https://studio.youtube.com/video/${o.id}/livestreaming`,
+      boundStreamId: (contentDetails.boundStreamId as string | undefined) ?? undefined,
+      streamKeyName: boundStreamId ? (streamKeyNames?.get(boundStreamId) ?? undefined) : undefined,
     };
   });
 }

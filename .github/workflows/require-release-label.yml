@@ -2,7 +2,7 @@ name: Require Release Label
 
 on:
   pull_request:
-    types: [opened, synchronize, labeled, unlabeled]
+    types: [labeled, unlabeled]
     branches: [master]
 
 jobs:

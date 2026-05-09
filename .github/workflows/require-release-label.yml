@@ -1,0 +1,41 @@
+name: Require Release Label
+
+on:
+  pull_request:
+    types: [opened, synchronize, labeled, unlabeled]
+    branches: [master]
+
+jobs:
+  check-label:
+    name: Release label present
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for exactly one release label
+        env:
+          LABELS: ${{ toJson(github.event.pull_request.labels.*.name) }}
+        run: |
+          release_labels=()
+          while IFS= read -r label; do
+            case "$label" in
+              release:major|release:minor|release:patch|no-release)
+                release_labels+=("$label")
+                ;;
+            esac
+          done < <(echo "$LABELS" | jq -r '.[]')
+
+          count=${#release_labels[@]}
+
+          if [ "$count" -eq 0 ]; then
+            echo "::error::No release label found on this PR."
+            echo "::error::Apply exactly one of: release:patch, release:minor, release:major, no-release"
+            echo "::error::Use the Labels panel on the right-hand side of the PR — writing the label name in the description does not count."
+            exit 1
+          fi
+
+          if [ "$count" -gt 1 ]; then
+            echo "::error::Multiple release labels found: ${release_labels[*]}"
+            echo "::error::Keep exactly one release label on the PR."
+            exit 1
+          fi
+
+          echo "✓ Release label present: ${release_labels[0]}"

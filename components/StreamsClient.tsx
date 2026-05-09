@@ -610,6 +610,22 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
                                                                 { key: 'title', label: 'Title' },
                                                                 { key: 'startTime', label: 'Scheduled' },
                                                                 { key: 'privacyStatus', label: 'Privacy' },
+                                                            ] as { key: SortKey; label: string }[]
+                                                        ).map(({ key, label }) => (
+                                                            <th
+                                                                key={key}
+                                                                onClick={() => handleUpcomingSort(key)}
+                                                                className="py-2.5 px-4 text-left cursor-pointer select-none hover:text-gray-800 dark:hover:text-gray-200 transition-colors whitespace-nowrap"
+                                                            >
+                                                                {label}
+                                                                {upcomingSortKey === key && (
+                                                                    <span className="ml-1 text-blue-500">{upcomingSortDir === 'asc' ? '↑' : '↓'}</span>
+                                                                )}
+                                                            </th>
+                                                        ))}
+                                                        <th className="py-2.5 px-4 text-left">Stream Key</th>
+                                                        {(
+                                                            [
                                                                 { key: 'enableAutoStart', label: 'Auto-start' },
                                                                 { key: 'enableAutoStop', label: 'Auto-stop' },
                                                             ] as { key: SortKey; label: string }[]
@@ -617,15 +633,15 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
                                                             <th
                                                                 key={key}
                                                                 onClick={() => handleUpcomingSort(key)}
-                                                                className={`py-2.5 px-4 cursor-pointer select-none hover:text-gray-800 dark:hover:text-gray-200 transition-colors whitespace-nowrap ${key === 'enableAutoStart' || key === 'enableAutoStop' ? 'text-center' : 'text-left'
-                                                                    }`}
+                                                                className="py-2.5 px-4 text-center cursor-pointer select-none hover:text-gray-800 dark:hover:text-gray-200 transition-colors whitespace-nowrap"
                                                             >
                                                                 {label}
                                                                 {upcomingSortKey === key && (
                                                                     <span className="ml-1 text-blue-500">{upcomingSortDir === 'asc' ? '↑' : '↓'}</span>
                                                                 )}
                                                             </th>
-                                                        ))}                                                        <th className="py-2.5 px-4 text-left">Stream Key</th>                                                        <th className="py-2.5 px-4 text-right">Actions</th>
+                                                        ))}
+                                                        <th className="py-2.5 px-4 text-right">Actions</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-900">
@@ -727,15 +743,12 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
                                                                 { key: 'title', label: 'Title' },
                                                                 { key: 'startTime', label: 'Scheduled' },
                                                                 { key: 'privacyStatus', label: 'Privacy' },
-                                                                { key: 'enableAutoStart', label: 'Auto-start' },
-                                                                { key: 'enableAutoStop', label: 'Auto-stop' },
                                                             ] as { key: SortKey; label: string }[]
                                                         ).map(({ key, label }) => (
                                                             <th
                                                                 key={key}
                                                                 onClick={() => handleCompletedSort(key)}
-                                                                className={`py-2.5 px-4 cursor-pointer select-none hover:text-gray-800 dark:hover:text-gray-200 transition-colors whitespace-nowrap ${key === 'enableAutoStart' || key === 'enableAutoStop' ? 'text-center' : 'text-left'
-                                                                    }`}
+                                                                className="py-2.5 px-4 text-left cursor-pointer select-none hover:text-gray-800 dark:hover:text-gray-200 transition-colors whitespace-nowrap"
                                                             >
                                                                 {label}
                                                                 {completedSortKey === key && (
@@ -744,6 +757,23 @@ export default function StreamsClient({ streams, error }: StreamsClientProps) {
                                                             </th>
                                                         ))}
                                                         <th className="py-2.5 px-4 text-left">Stream Key</th>
+                                                        {(
+                                                            [
+                                                                { key: 'enableAutoStart', label: 'Auto-start' },
+                                                                { key: 'enableAutoStop', label: 'Auto-stop' },
+                                                            ] as { key: SortKey; label: string }[]
+                                                        ).map(({ key, label }) => (
+                                                            <th
+                                                                key={key}
+                                                                onClick={() => handleCompletedSort(key)}
+                                                                className="py-2.5 px-4 text-center cursor-pointer select-none hover:text-gray-800 dark:hover:text-gray-200 transition-colors whitespace-nowrap"
+                                                            >
+                                                                {label}
+                                                                {completedSortKey === key && (
+                                                                    <span className="ml-1 text-blue-500">{completedSortDir === 'asc' ? '↑' : '↓'}</span>
+                                                                )}
+                                                            </th>
+                                                        ))}
                                                         <th className="py-2.5 px-4 text-right">Actions</th>
                                                     </tr>
                                                 </thead>

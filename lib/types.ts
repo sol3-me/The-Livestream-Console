@@ -20,7 +20,29 @@ export interface FormattedStream {
   privacyStatus: string;
   videoLink: string;
   controlRoomLink: string;
+  boundStreamId?: string;
+  streamKeyName?: string;
 }
+
+export interface AvailableStreamKey {
+  id: string;
+  name: string;
+  resolution?: string;
+  frameRate?: string;
+  ingestionType?: string;
+}
+
+export interface StreamKeyInfo {
+  streamId: string;
+  streamTitle: string;
+  streamKey: string;
+  ingestionAddress: string;
+  backupIngestionAddress?: string;
+  resolution?: string;
+  frameRate?: string;
+  ingestionType?: string;
+}
+
 
 export interface StreamsData {
   active: FormattedStream[];

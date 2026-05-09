@@ -1,4 +1,5 @@
 import { google, youtube_v3 } from 'googleapis';
+import type { StreamKeyInfo } from './types';
 import type { StreamStatus } from './constants';
 import { streamStatus as STATUS } from './constants';
 
@@ -93,5 +94,77 @@ export async function createStream(accessToken: string, data: CreateStreamData) 
         },
       },
     },
+  });
+}
+
+export async function getLiveStreamByBroadcastId(
+  accessToken: string,
+  broadcastId: string,
+): Promise<StreamKeyInfo | null> {
+  const youtube = getYoutubeClient(accessToken);
+
+  const broadcastRes = await youtube.liveBroadcasts.list({
+    part: ['contentDetails'],
+    id: [broadcastId],
+  });
+  const boundStreamId = broadcastRes.data.items?.[0]?.contentDetails?.boundStreamId;
+  if (!boundStreamId) return null;
+
+  const streamRes = await youtube.liveStreams.list({
+    part: ['snippet', 'cdn'],
+    id: [boundStreamId],
+  });
+  const liveStream = streamRes.data.items?.[0];
+  if (!liveStream) return null;
+
+  const cdn = liveStream.cdn;
+  const ingestionInfo = cdn?.ingestionInfo;
+
+  return {
+    streamId: boundStreamId,
+    streamTitle: liveStream.snippet?.title ?? '',
+    streamKey: ingestionInfo?.streamName ?? '',
+    ingestionAddress: ingestionInfo?.ingestionAddress ?? '',
+    backupIngestionAddress: ingestionInfo?.backupIngestionAddress ?? undefined,
+    resolution: cdn?.resolution ?? undefined,
+    frameRate: cdn?.frameRate ?? undefined,
+    ingestionType: cdn?.ingestionType ?? undefined,
+  };
+}
+
+/** Fetch multiple liveStreams by their IDs in a single API call. */
+export async function getLiveStreamsByIds(accessToken: string, streamIds: string[]) {
+  if (streamIds.length === 0) return [];
+  const youtube = getYoutubeClient(accessToken);
+  const res = await youtube.liveStreams.list({
+    part: ['snippet', 'cdn'],
+    id: streamIds,
+    maxResults: 50,
+  });
+  return res.data.items ?? [];
+}
+
+/** List all stream keys belonging to the authenticated user. */
+export async function getMyLiveStreams(accessToken: string) {
+  const youtube = getYoutubeClient(accessToken);
+  const res = await youtube.liveStreams.list({
+    part: ['snippet', 'cdn'],
+    mine: true,
+    maxResults: 50,
+  });
+  return res.data.items ?? [];
+}
+
+/** Bind a broadcast to a specific stream key. */
+export async function bindBroadcastToStream(
+  accessToken: string,
+  broadcastId: string,
+  streamId: string,
+) {
+  const youtube = getYoutubeClient(accessToken);
+  return youtube.liveBroadcasts.bind({
+    id: broadcastId,
+    streamId,
+    part: ['id', 'contentDetails'],
   });
 }

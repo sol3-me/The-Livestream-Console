@@ -14,19 +14,17 @@
 
 ---
 
-## 🏷️ Release label
+## ���️ Release label
 
-Adding a release label to this PR will automatically create a **GitHub Release**
-with generated release notes when the PR is merged into `master`.
+> **Action required:** use the **Labels panel** (top-right of this PR) to apply a label **before merging**.
+> A CI check will block the merge if no release label is present.
 
-| Label | Effect |
-| --- | --- |
-| `release:patch` | Bug fixes, small tweaks — e.g. `v3.3.0 → v3.3.1` |
-| `release:minor` | New backwards-compatible features — e.g. `v3.3.0 → v3.4.0` |
-| `release:major` | Breaking changes — e.g. `v3.3.0 → v4.0.0` |
+| Label | When to use | Version effect |
+| --- | --- | --- |
+| `release:patch` | Bug fixes, small tweaks | `v3.3.0 → v3.3.1` |
+| `release:minor` | New backwards-compatible features | `v3.3.0 → v3.4.0` |
+| `release:major` | Breaking changes | `v3.3.0 → v4.0.0` |
+| `no-release` | Chore, docs, CI — no version bump needed | — |
 
-**Instructions:**
-- Apply **exactly one** of the labels above if this PR should ship as a release.
-- Apply **no release label** if this is a chore, docs update, or internal refactor
-  that does not need its own release — the deploy pipeline will still run as normal.
-- Applying more than one release label will **fail** the release workflow; keep exactly one.
+- Apply **exactly one** label. Applying multiple `release:*` labels will fail the release workflow.
+- Writing the label name in the PR body does **not** count — it must be applied via the Labels panel.

@@ -7,12 +7,9 @@
 > **Org vs account — read this first.** `sol3-me` is the **organisation** that owns the
 > self-hosted runner and the GHCR packages. `sol3uk` is a **personal account**, not an org.
 > Organisation-level self-hosted runners are only available to repositories *inside* that
-> organisation, so a `sol3uk/*` repository cannot use the shared runner described here.
->
-> This guide previously said `sol3uk` throughout, which was wrong. Every `sol3uk` below has been
-> corrected to `sol3-me`. If you are copying this pattern into a repository that genuinely lives
-> under the `sol3uk` account, you would need a runner registered at the user level instead — and
-> the URLs in sections 2.1 and 2.3 would be different again.
+> organisation, so a `sol3uk/*` repository cannot use the shared runner described here — it would
+> need a runner registered at the user level, and the settings URLs in sections 2.1 and 2.3 would
+> differ accordingly.
 >
 > The canonical, maintained version of this document now lives in the multi-app repo:
 > `sol3-me/apps-for-fun` → `docs/deployment.md`.

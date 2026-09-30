@@ -1,6 +1,21 @@
 # GitHub Actions CI/CD – Self-Hosted Runner Deployment Guide
 
-> **Scope:** Any repository in the `sol3uk` GitHub organisation that needs to build a Docker image in CI, push it to GitHub Container Registry (GHCR), and run it on the self-hosted host machine.
+> **Scope:** Any repository in the **`sol3-me`** GitHub organisation that needs to build a Docker
+> image in CI, push it to GitHub Container Registry (GHCR), and run it on the self-hosted host
+> machine.
+
+> **Org vs account — read this first.** `sol3-me` is the **organisation** that owns the
+> self-hosted runner and the GHCR packages. `sol3uk` is a **personal account**, not an org.
+> Organisation-level self-hosted runners are only available to repositories *inside* that
+> organisation, so a `sol3uk/*` repository cannot use the shared runner described here.
+>
+> This guide previously said `sol3uk` throughout, which was wrong. Every `sol3uk` below has been
+> corrected to `sol3-me`. If you are copying this pattern into a repository that genuinely lives
+> under the `sol3uk` account, you would need a runner registered at the user level instead — and
+> the URLs in sections 2.1 and 2.3 would be different again.
+>
+> The canonical, maintained version of this document now lives in the multi-app repo:
+> `sol3-me/apps-for-fun` → `docs/deployment.md`.
 
 ---
 
@@ -10,7 +25,7 @@
 GitHub push ──► GitHub Actions (self-hosted runner container)
                     │
                     ├─ docker build  (inside runner)
-                    ├─ docker push   ──► ghcr.io/sol3uk/<image>
+                    ├─ docker push   ──► ghcr.io/sol3-me/<image>
                     └─ docker run    ──► running container on host
 ```
 
@@ -37,7 +52,7 @@ docker ps --filter name=github-runner
 ```
 
 The runner needs the labels `self-hosted`, `Linux`, `X64`. Check the runner is listed as **Idle** in:  
-`https://github.com/organizations/sol3uk/settings/actions/runners`
+`https://github.com/organizations/sol3-me/settings/actions/runners`
 
 ### 2.2 Repository settings
 
@@ -50,7 +65,7 @@ In the repository → **Settings → Actions → General**:
 ### 2.3 GHCR package visibility
 
 After the first successful push, make the package public (or ensure team members have `read` access):  
-`https://github.com/orgs/sol3uk/packages`
+`https://github.com/orgs/sol3-me/packages`
 
 ---
 
@@ -102,7 +117,7 @@ jobs:
   deploy:
     # Prevents forks or stale copies of this workflow from firing on the runner.
     if: |
-      github.repository == 'sol3uk/<REPO_NAME>' &&
+      github.repository == 'sol3-me/<REPO_NAME>' &&
       github.ref == 'refs/heads/master'
     runs-on: [self-hosted, Linux, X64]
     permissions:
@@ -110,7 +125,7 @@ jobs:
       packages: write   # required to push to GHCR
 
     env:
-      IMAGE:          ghcr.io/sol3uk/<IMAGE_NAME>    # e.g. ghcr.io/sol3uk/my-app
+      IMAGE:          ghcr.io/sol3-me/<IMAGE_NAME>   # e.g. ghcr.io/sol3-me/my-app
       CONTAINER_NAME: <CONTAINER_NAME>               # e.g. my-app
       HOST_PORT:      "<HOST_PORT>"                  # e.g. "8091" — must be free on host
       CONTAINER_PORT: "<CONTAINER_PORT>"             # e.g. "3000" — matches EXPOSE in Dockerfile
@@ -230,8 +245,17 @@ Pick a free port for `HOST_PORT`. The existing apps in the org use:
 
 | App | Host port |
 |---|---|
+| `homepage-glance` | 8081 |
 | `livestream-console` | 8090 |
-| *(your new app)* | 8091+ |
+| `tacta-count` | 8091 |
+| `sleevesnap` | 8093 |
+| `lauraeve.art` | 8094 |
+| *(your new app)* | 8095+ |
+
+> The full, maintained table — including apps outside this repo, reserved ports and the reasoning
+> behind the gaps — lives in `sol3-me/apps-for-fun` → `docs/deployment.md` section 5. Prefer that
+> one; this table is a subset and will drift. Always confirm against the host before claiming a
+> port, since a container started by hand will not appear in any repo.
 
 ---
 
@@ -242,7 +266,7 @@ Pick a free port for `HOST_PORT`. The existing apps in the org use:
 3. The runner **authenticates to GHCR** using the auto-generated `GITHUB_TOKEN`
 4. The existing `:latest` image is **retagged `:previous`** in GHCR (enables one-step rollback)
 5. Docker **builds** the new image locally in the runner daemon
-6. The new image is **pushed** to `ghcr.io/sol3uk/<IMAGE_NAME>:latest`
+6. The new image is **pushed** to `ghcr.io/sol3-me/<IMAGE_NAME>:latest`
 7. The workflow **verifies** the `.env.local` file exists on the host — exits with a clear error if not
 8. The old container is **stopped and removed**; the new container is **started** with `docker run`
 9. **Dangling images** are pruned to keep the host disk clean
@@ -258,13 +282,13 @@ If a deployment breaks the application, roll back to the previous image without 
 ```bash
 # SSH into the host machine
 docker rm -f <CONTAINER_NAME>
-docker pull ghcr.io/sol3uk/<IMAGE_NAME>:previous
+docker pull ghcr.io/sol3-me/<IMAGE_NAME>:previous
 docker run -d \
   --name <CONTAINER_NAME> \
   --restart unless-stopped \
   -p <HOST_PORT>:<CONTAINER_PORT> \
   --env-file /mnt/user/appdata/github_runner/persistent_files/<APP_SLUG>/.env.local \
-  ghcr.io/sol3uk/<IMAGE_NAME>:previous
+  ghcr.io/sol3-me/<IMAGE_NAME>:previous
 ```
 
 ---
@@ -299,4 +323,4 @@ docker run -d \
 
 ---
 
-*This guide is based on the pattern established in `sol3uk/The-Livestream-Console`. The runner infrastructure, GHCR registry, and persistent-files mount path are shared across all repos in the org.*
+*This guide is based on the pattern established in `sol3-me/The-Livestream-Console`. The runner infrastructure, GHCR registry, and persistent-files mount path are shared across all repos in the org.*

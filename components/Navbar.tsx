@@ -99,8 +99,17 @@ export default function Navbar() {
     <nav className="bg-gray-900 text-white px-4 py-3 relative z-40">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
         {/* Brand */}
-        <Link href="/" className="font-bold text-lg tracking-tight text-white shrink-0">
-          TLC
+        <Link href="/" className="flex items-center gap-2 font-bold text-lg tracking-tight text-white shrink-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/icon.svg"
+            alt=""
+            width={24}
+            height={24}
+            aria-hidden="true"
+            className="h-6 w-6 rounded"
+          />
+          <span>TLC</span>
         </Link>
 
         {/* Desktop nav */}

@@ -13,6 +13,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:verify": "node scripts/verify-tests.mjs",
+    "test:docker": "docker build --target test --progress=plain .",
     "lockfile:check": "docker build --target deps --progress=plain ."
   },
   "dependencies": {

@@ -1,0 +1,33 @@
+name: Tests
+
+# Same check the deploy workflow runs before deploying, on PRs into master.
+# Runs the Dockerfile's `test` stage: lint, tsc, unit tests and the
+# comment-out verifier, inside the deploy image (the runner host has no Node).
+
+on:
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: tests-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Lint, typecheck and unit tests
+    # Same-repo PRs only. A fork PR on a self-hosted runner would execute
+    # the contributor's code on the host. Never switch this to pull_request_target.
+    if: |
+      github.repository == 'sol3-me/The-Livestream-Console' &&
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: [self-hosted, Linux, X64]
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Run tests in the deploy image
+        run: docker build --target test --progress=plain .

@@ -906,5 +906,54 @@
     "test": "tests/unit/lib/playlists.test.ts",
     "start": "kind: 'youtube#video',",
     "lines": 1
+  },
+  {
+    "id": "services/youtube: unset mode defaults to empty",
+    "file": "lib/services/youtube/index.ts",
+    "test": "tests/unit/lib/services/youtube.test.ts",
+    "start": "const mode = process.env.TLC_YOUTUBE_MODE ?? '';",
+    "lines": 1,
+    "stub": [
+      "const mode = process.env.TLC_YOUTUBE_MODE;"
+    ]
+  },
+  {
+    "id": "services/youtube: google branch",
+    "file": "lib/services/youtube/index.ts",
+    "test": "tests/unit/lib/services/youtube.test.ts",
+    "start": "if (mode === '' || mode === 'google') {",
+    "lines": 3
+  },
+  {
+    "id": "services/youtube: empty mode means google",
+    "file": "lib/services/youtube/index.ts",
+    "test": "tests/unit/lib/services/youtube.test.ts",
+    "start": "if (mode === '' || mode === 'google') {",
+    "lines": 1,
+    "stub": [
+      "if (mode === 'google') {"
+    ]
+  },
+  {
+    "id": "services/youtube: fake mode guard",
+    "file": "lib/services/youtube/index.ts",
+    "test": "tests/unit/lib/services/youtube.test.ts",
+    "start": "if (mode === 'fake') {",
+    "lines": 3
+  },
+  {
+    "id": "services/youtube: invalid mode throws",
+    "file": "lib/services/youtube/index.ts",
+    "test": "tests/unit/lib/services/youtube.test.ts",
+    "start": "throw new Error(`Invalid TLC_YOUTUBE_MODE",
+    "lines": 1
+  },
+  {
+    "id": "services/youtube: google service method wiring",
+    "file": "lib/services/youtube/google.ts",
+    "test": "tests/unit/lib/services/youtube.test.ts",
+    "start": "  createStream,",
+    "occurrence": 2,
+    "lines": 1
   }
 ]

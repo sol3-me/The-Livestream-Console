@@ -1,0 +1,36 @@
+name: Lockfile Check
+
+# Runs the Dockerfile's `deps` stage (npm ci in node:24-alpine), so the lockfile
+# is checked by the same npm the deploy uses. A lockfile written by a different
+# npm or OS (e.g. missing Linux-only optional deps) fails here, not at deploy.
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - package.json
+      - package-lock.json
+      - Dockerfile
+      - .github/workflows/lockfile-check.yml
+  workflow_dispatch:
+
+jobs:
+  npm-ci-in-image:
+    name: npm ci in deploy image
+    # Same-repo PRs only. A fork PR on a self-hosted runner would execute
+    # the contributor's code on the host. Never switch this to pull_request_target.
+    if: |
+      github.repository == 'sol3-me/The-Livestream-Console' &&
+      (github.event_name != 'pull_request' ||
+       github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: [self-hosted, Linux, X64]
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      # Same command as `npm run lockfile:check`, called directly because the
+      # runner host has Docker but no Node/npm.
+      - name: Build deps stage
+        run: docker build --target deps --progress=plain .

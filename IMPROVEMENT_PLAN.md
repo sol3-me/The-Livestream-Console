@@ -166,3 +166,4 @@ These are initial observations only. Scope gets agreed before any work starts.
 | 2026-11-15 | Vitest 5, `@types/node` bumped `^20` → `^24` | Vitest 5's peer range needs it, and it now matches the declared `engines.node >= 24`. |
 | 2026-11-15 | Comment-out verification automated via `npm run test:verify` | The same proof as commenting out by hand, but repeatable and reviewable in the PR. |
 | 2026-11-15 | Commented-out code is never committed | Red state is verified by the tool and visible in its output. Committing disabled production code would break the branch. |
+| 2026-11-15 | The lockfile is checked with the deploy image's npm (`npm run lockfile:check`, plus the Lockfile Check workflow on PRs) | The 1A/1B merge broke the deploy. Windows npm 11.6.2 skipped the Linux-only nested `@emnapi` entries, and `npm ci` in node:24-alpine (npm 11.19.1) rejected the lockfile. To regenerate: `npx npm@<image npm> install --package-lock-only`. |

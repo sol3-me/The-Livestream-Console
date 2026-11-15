@@ -30,5 +30,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      # Same command as `npm run lockfile:check`, called directly because the
+      # runner host has Docker but no Node/npm.
       - name: Build deps stage
-        run: npm run lockfile:check
+        run: docker build --target deps --progress=plain .

@@ -34,7 +34,9 @@ export default function StreamFeatured({ active, last, onStop, onEdit }: StreamF
             Live
           </span>
         </h1>
-        <div className="border-2 border-red-400 rounded-lg p-4 bg-white dark:bg-gray-800 shadow-sm">
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+          <div className="h-1 w-full bg-red-500" />
+          <div className="p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <IframeEmbed videoId={stream.id} />
             <div>
@@ -108,6 +110,7 @@ export default function StreamFeatured({ active, last, onStop, onEdit }: StreamF
               </div>
             </div>
           </div>
+          </div>
         </div>
       </div>
     );
@@ -123,7 +126,9 @@ export default function StreamFeatured({ active, last, onStop, onEdit }: StreamF
             Complete
           </span>
         </h1>
-        <div className="border-2 border-green-400 rounded-lg p-4 bg-white dark:bg-gray-800 shadow-sm">
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800">
+          <div className="h-1 w-full bg-green-500" />
+          <div className="p-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <IframeEmbed videoId={stream.id} />
             <div>
@@ -153,6 +158,7 @@ export default function StreamFeatured({ active, last, onStop, onEdit }: StreamF
                 </a>
               </div>
             </div>
+          </div>
           </div>
         </div>
       </div>

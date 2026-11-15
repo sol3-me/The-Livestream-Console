@@ -94,10 +94,13 @@ Per route, at minimum: 401 when there's no session; the happy path calls the dep
 
 ### 1C. Introduce the service seam (refactor, no behaviour change)
 
-- [ ] Define a `YouTubeService` interface (streams, stream keys, playlists) in `lib/services/youtube/`.
-- [ ] `GoogleYouTubeService` wraps the current `googleapis` calls, with one shared client factory (fixes B9's duplication).
-- [ ] `getYouTubeService(accessToken)` factory chooses the implementation from `TLC_YOUTUBE_MODE` (`google` by default, or `fake`).
-- [ ] Routes and server pages depend on the factory rather than importing functions directly. Update the unit tests to mock the factory. Every test must stay green with no other changes.
+- [x] Define a `YouTubeService` interface (streams, stream keys, playlists) in `lib/services/youtube/`.
+- [x] `googleYouTubeService` wraps the current `googleapis` calls by delegating to the existing `lib/youtube` and `lib/playlists` wrappers.
+- [ ] One shared googleapis client factory (fixes B9's duplication). Deferred: moving `getYoutubeClient` also moves its mutation entries.
+- [x] The `getYouTubeService()` factory chooses the implementation from `TLC_YOUTUBE_MODE`. Unset, empty or `google` gives Google. `fake` throws until 1D. Any other value throws rather than falling back to Google.
+- [x] Routes and server pages depend on the factory rather than importing functions directly. The unit tests mock it through `tests/unit/helpers/youtube-service.ts`, and no assertion changed.
+
+**Status (2026-11-15):** 187 unit tests and **109/109 mutations killed** (the 103 existing, plus 6 for the factory). `tsc`, `next lint` and `next build` are clean.
 - [ ] Move the SSR data-loading out of `page.tsx` into `lib/loaders/*` so it can be unit tested.
 
 ### 1D. Fake YouTube service (JSON fixtures, no DB)
@@ -166,4 +169,6 @@ These are initial observations only. Scope gets agreed before any work starts.
 | 2026-11-15 | Vitest 5, `@types/node` bumped `^20` → `^24` | Vitest 5's peer range needs it, and it now matches the declared `engines.node >= 24`. |
 | 2026-11-15 | Comment-out verification automated via `npm run test:verify` | The same proof as commenting out by hand, but repeatable and reviewable in the PR. |
 | 2026-11-15 | Commented-out code is never committed | Red state is verified by the tool and visible in its output. Committing disabled production code would break the branch. |
+| 2026-11-15 | `getYouTubeService()` takes no token. Methods keep `(accessToken, …)`, and callers destructure them | Every route assertion and all 103 mutation anchors stay unchanged. A stateless service is simpler for the 1D fake. Implementations must not use `this`. |
+| 2026-11-15 | An unknown `TLC_YOUTUBE_MODE` throws rather than defaulting to Google | A typo shouldn't silently send test traffic to the real API. |
 | 2026-11-15 | The lockfile is checked with the deploy image's npm (`npm run lockfile:check`, plus the Lockfile Check workflow on PRs) | The 1A/1B merge broke the deploy. Windows npm 11.6.2 skipped the Linux-only nested `@emnapi` entries, and `npm ci` in node:24-alpine (npm 11.19.1) rejected the lockfile. To regenerate: `npx npm@<image npm> install --package-lock-only`. |

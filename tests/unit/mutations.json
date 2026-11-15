@@ -1,0 +1,910 @@
+[
+  {
+    "id": "streams/create: auth guard",
+    "file": "app/api/streams/create/route.ts",
+    "test": "tests/unit/api/streams/create.test.ts",
+    "start": "if (!session?.access_token) {",
+    "lines": 3
+  },
+  {
+    "id": "streams/create: title validation",
+    "file": "app/api/streams/create/route.ts",
+    "test": "tests/unit/api/streams/create.test.ts",
+    "start": "if (!body.title?.trim()) {",
+    "lines": 3
+  },
+  {
+    "id": "streams/create: start time normalisation",
+    "file": "app/api/streams/create/route.ts",
+    "test": "tests/unit/api/streams/create.test.ts",
+    "start": "const scheduledStartTime = ",
+    "lines": 3,
+    "stub": [
+      "const scheduledStartTime = body.startTime;"
+    ]
+  },
+  {
+    "id": "streams/create: createStream call",
+    "file": "app/api/streams/create/route.ts",
+    "test": "tests/unit/api/streams/create.test.ts",
+    "start": "const result = await createStream(",
+    "end": "});",
+    "stub": [
+      "const result = { data: { id: 'vid-1' } };"
+    ]
+  },
+  {
+    "id": "streams/create: stream key bind",
+    "file": "app/api/streams/create/route.ts",
+    "test": "tests/unit/api/streams/create.test.ts",
+    "start": "if (videoId && body.streamKeyId) {",
+    "lines": 5
+  },
+  {
+    "id": "streams/create: bind is best-effort",
+    "file": "app/api/streams/create/route.ts",
+    "test": "tests/unit/api/streams/create.test.ts",
+    "start": "} catch { /* key binding is best-effort */ }",
+    "lines": 1,
+    "stub": [
+      "} finally { }"
+    ]
+  },
+  {
+    "id": "streams/create: playlist adds",
+    "file": "app/api/streams/create/route.ts",
+    "test": "tests/unit/api/streams/create.test.ts",
+    "start": "if (videoId && body.playlistIds) {",
+    "lines": 8
+  },
+  {
+    "id": "streams/create: playlist add is best-effort",
+    "file": "app/api/streams/create/route.ts",
+    "test": "tests/unit/api/streams/create.test.ts",
+    "start": "} catch { /* playlist add is best-effort */ }",
+    "lines": 1,
+    "stub": [
+      "} finally { }"
+    ]
+  },
+  {
+    "id": "streams/create: error response",
+    "file": "app/api/streams/create/route.ts",
+    "test": "tests/unit/api/streams/create.test.ts",
+    "start": "return NextResponse.json(e, { status: 500 });",
+    "lines": 1,
+    "stub": [
+      "return NextResponse.json({ redirectUrl: '/streams' });"
+    ]
+  },
+  {
+    "id": "streams/edit: auth guard",
+    "file": "app/api/streams/edit/[id]/route.ts",
+    "test": "tests/unit/api/streams/edit.test.ts",
+    "start": "if (!session?.access_token) {",
+    "lines": 3
+  },
+  {
+    "id": "streams/edit: broadcast lookup",
+    "file": "app/api/streams/edit/[id]/route.ts",
+    "test": "tests/unit/api/streams/edit.test.ts",
+    "start": "const apiStream = await getStreamById(",
+    "lines": 1,
+    "stub": [
+      "const apiStream = { data: { items: [{ id: 'other' }] as any[] } };"
+    ]
+  },
+  {
+    "id": "streams/edit: 404 when not found",
+    "file": "app/api/streams/edit/[id]/route.ts",
+    "test": "tests/unit/api/streams/edit.test.ts",
+    "start": "if (!ytStreamData) {",
+    "lines": 3
+  },
+  {
+    "id": "streams/edit: Stream merge",
+    "file": "app/api/streams/edit/[id]/route.ts",
+    "test": "tests/unit/api/streams/edit.test.ts",
+    "start": "const streamForAPI = new Stream(",
+    "lines": 1,
+    "stub": [
+      "const streamForAPI = ytStreamData;"
+    ]
+  },
+  {
+    "id": "streams/edit: editStream call",
+    "file": "app/api/streams/edit/[id]/route.ts",
+    "test": "tests/unit/api/streams/edit.test.ts",
+    "start": "await editStream(session.access_token, streamForAPI);",
+    "lines": 1
+  },
+  {
+    "id": "streams/edit: stream key bind",
+    "file": "app/api/streams/edit/[id]/route.ts",
+    "test": "tests/unit/api/streams/edit.test.ts",
+    "start": "if (body.streamKeyId) {",
+    "lines": 3
+  },
+  {
+    "id": "streams/edit: playlist adds",
+    "file": "app/api/streams/edit/[id]/route.ts",
+    "test": "tests/unit/api/streams/edit.test.ts",
+    "start": "if (body.playlistIds) {",
+    "lines": 8
+  },
+  {
+    "id": "streams/edit: playlist add is best-effort",
+    "file": "app/api/streams/edit/[id]/route.ts",
+    "test": "tests/unit/api/streams/edit.test.ts",
+    "start": "} catch { /* playlist add is best-effort */ }",
+    "lines": 1,
+    "stub": [
+      "} finally { }"
+    ]
+  },
+  {
+    "id": "streams/edit: error response",
+    "file": "app/api/streams/edit/[id]/route.ts",
+    "test": "tests/unit/api/streams/edit.test.ts",
+    "start": "return NextResponse.json(e, { status: 500 });",
+    "lines": 1,
+    "stub": [
+      "return NextResponse.json({ redirectUrl: '/streams' });"
+    ]
+  },
+  {
+    "id": "streams/stop: auth guard",
+    "file": "app/api/streams/stop/[id]/route.ts",
+    "test": "tests/unit/api/streams/stop-delete.test.ts",
+    "start": "if (!session?.access_token) {",
+    "lines": 3
+  },
+  {
+    "id": "streams/stop: stopStreamById call",
+    "file": "app/api/streams/stop/[id]/route.ts",
+    "test": "tests/unit/api/streams/stop-delete.test.ts",
+    "start": "await stopStreamById(",
+    "lines": 1
+  },
+  {
+    "id": "streams/stop: error response",
+    "file": "app/api/streams/stop/[id]/route.ts",
+    "test": "tests/unit/api/streams/stop-delete.test.ts",
+    "start": "return NextResponse.json(e, { status: 500 });",
+    "lines": 1,
+    "stub": [
+      "return NextResponse.json({ redirectUrl: '/streams' });"
+    ]
+  },
+  {
+    "id": "streams/delete: auth guard",
+    "file": "app/api/streams/delete/[id]/route.ts",
+    "test": "tests/unit/api/streams/stop-delete.test.ts",
+    "start": "if (!session?.access_token) {",
+    "lines": 3
+  },
+  {
+    "id": "streams/delete: deleteStream call",
+    "file": "app/api/streams/delete/[id]/route.ts",
+    "test": "tests/unit/api/streams/stop-delete.test.ts",
+    "start": "await deleteStream(",
+    "lines": 1
+  },
+  {
+    "id": "streams/delete: error response",
+    "file": "app/api/streams/delete/[id]/route.ts",
+    "test": "tests/unit/api/streams/stop-delete.test.ts",
+    "start": "return NextResponse.json(e, { status: 500 });",
+    "lines": 1,
+    "stub": [
+      "return NextResponse.json({ redirectUrl: '/streams' });"
+    ]
+  },
+  {
+    "id": "streams/keys: auth guard",
+    "file": "app/api/streams/keys/route.ts",
+    "test": "tests/unit/api/streams/keys.test.ts",
+    "start": "if (!session?.access_token) {",
+    "lines": 3
+  },
+  {
+    "id": "streams/keys: getMyLiveStreams call",
+    "file": "app/api/streams/keys/route.ts",
+    "test": "tests/unit/api/streams/keys.test.ts",
+    "start": "const items = await getMyLiveStreams(",
+    "lines": 1,
+    "stub": [
+      "const items = [] as any[];"
+    ]
+  },
+  {
+    "id": "streams/keys: key mapping",
+    "file": "app/api/streams/keys/route.ts",
+    "test": "tests/unit/api/streams/keys.test.ts",
+    "start": "const keys: AvailableStreamKey[] = items.map(",
+    "end": "}));",
+    "stub": [
+      "const keys = items;"
+    ]
+  },
+  {
+    "id": "streams/keys: error response",
+    "file": "app/api/streams/keys/route.ts",
+    "test": "tests/unit/api/streams/keys.test.ts",
+    "start": "return NextResponse.json(e, { status: 500 });",
+    "lines": 1,
+    "stub": [
+      "return NextResponse.json([]);"
+    ]
+  },
+  {
+    "id": "streams/streamkey: auth guard",
+    "file": "app/api/streams/[id]/streamkey/route.ts",
+    "test": "tests/unit/api/streams/keys.test.ts",
+    "start": "if (!session?.access_token) {",
+    "lines": 3
+  },
+  {
+    "id": "streams/streamkey: lookup call",
+    "file": "app/api/streams/[id]/streamkey/route.ts",
+    "test": "tests/unit/api/streams/keys.test.ts",
+    "start": "const result = await getLiveStreamByBroadcastId(",
+    "lines": 1,
+    "stub": [
+      "const result = { streamId: 'x' };"
+    ]
+  },
+  {
+    "id": "streams/streamkey: 404 when no key",
+    "file": "app/api/streams/[id]/streamkey/route.ts",
+    "test": "tests/unit/api/streams/keys.test.ts",
+    "start": "if (!result) {",
+    "lines": 3
+  },
+  {
+    "id": "streams/streamkey: error response",
+    "file": "app/api/streams/[id]/streamkey/route.ts",
+    "test": "tests/unit/api/streams/keys.test.ts",
+    "start": "return NextResponse.json(e, { status: 500 });",
+    "lines": 1,
+    "stub": [
+      "return NextResponse.json({});"
+    ]
+  },
+  {
+    "id": "playlists GET: auth guard",
+    "file": "app/api/playlists/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "if (!session?.access_token) {",
+    "lines": 3,
+    "occurrence": 1
+  },
+  {
+    "id": "playlists GET: getPlaylists call",
+    "file": "app/api/playlists/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "const result = await getPlaylists(",
+    "lines": 1,
+    "stub": [
+      "const result = { data: { items: [] as unknown[] } };"
+    ]
+  },
+  {
+    "id": "playlists GET: empty fallback",
+    "file": "app/api/playlists/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "return NextResponse.json(result.data.items ?? []);",
+    "lines": 1,
+    "stub": [
+      "return NextResponse.json(result.data.items ?? null);"
+    ]
+  },
+  {
+    "id": "playlists GET: error response",
+    "file": "app/api/playlists/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "return NextResponse.json(e, { status: 500 });",
+    "lines": 1,
+    "occurrence": 1,
+    "stub": [
+      "return NextResponse.json({ success: true });"
+    ]
+  },
+  {
+    "id": "playlists POST: auth guard",
+    "file": "app/api/playlists/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "if (!session?.access_token) {",
+    "lines": 3,
+    "occurrence": 2
+  },
+  {
+    "id": "playlists POST: title validation",
+    "file": "app/api/playlists/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "if (!body.title?.trim()) {",
+    "lines": 3
+  },
+  {
+    "id": "playlists POST: createPlaylist call",
+    "file": "app/api/playlists/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "const result = await createPlaylist(",
+    "end": "});",
+    "stub": [
+      "const result = { data: {} };"
+    ]
+  },
+  {
+    "id": "playlists POST: title trim",
+    "file": "app/api/playlists/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "title: body.title.trim(),",
+    "lines": 1,
+    "stub": [
+      "title: body.title,"
+    ]
+  },
+  {
+    "id": "playlists POST: description default",
+    "file": "app/api/playlists/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "description: body.description ?? '',",
+    "lines": 1,
+    "stub": [
+      "description: body.description,"
+    ]
+  },
+  {
+    "id": "playlists POST: privacy default",
+    "file": "app/api/playlists/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "privacyStatus: body.privacyStatus ?? 'private',",
+    "lines": 1,
+    "stub": [
+      "privacyStatus: body.privacyStatus,"
+    ]
+  },
+  {
+    "id": "playlists POST: error response",
+    "file": "app/api/playlists/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "return NextResponse.json(e, { status: 500 });",
+    "lines": 1,
+    "occurrence": 2,
+    "stub": [
+      "return NextResponse.json({ success: true });"
+    ]
+  },
+  {
+    "id": "playlists/[id] PUT: auth guard",
+    "file": "app/api/playlists/[id]/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "if (!session?.access_token) {",
+    "lines": 3,
+    "occurrence": 1
+  },
+  {
+    "id": "playlists/[id] PUT: title validation",
+    "file": "app/api/playlists/[id]/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "if (!body.title?.trim()) {",
+    "lines": 3
+  },
+  {
+    "id": "playlists/[id] PUT: updatePlaylist call",
+    "file": "app/api/playlists/[id]/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "const result = await updatePlaylist(",
+    "end": "});",
+    "stub": [
+      "const result = { data: {} };"
+    ]
+  },
+  {
+    "id": "playlists/[id] PUT: title trim",
+    "file": "app/api/playlists/[id]/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "title: body.title.trim(),",
+    "lines": 1,
+    "stub": [
+      "title: body.title,"
+    ]
+  },
+  {
+    "id": "playlists/[id] PUT: description default",
+    "file": "app/api/playlists/[id]/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "description: body.description ?? '',",
+    "lines": 1,
+    "stub": [
+      "description: body.description,"
+    ]
+  },
+  {
+    "id": "playlists/[id] PUT: privacy default",
+    "file": "app/api/playlists/[id]/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "privacyStatus: body.privacyStatus ?? 'private',",
+    "lines": 1,
+    "stub": [
+      "privacyStatus: body.privacyStatus,"
+    ]
+  },
+  {
+    "id": "playlists/[id] PUT: error response",
+    "file": "app/api/playlists/[id]/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "return NextResponse.json(e, { status: 500 });",
+    "lines": 1,
+    "occurrence": 1,
+    "stub": [
+      "return NextResponse.json({ success: true });"
+    ]
+  },
+  {
+    "id": "playlists/[id] DELETE: auth guard",
+    "file": "app/api/playlists/[id]/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "if (!session?.access_token) {",
+    "lines": 3,
+    "occurrence": 2
+  },
+  {
+    "id": "playlists/[id] DELETE: deletePlaylist call",
+    "file": "app/api/playlists/[id]/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "await deletePlaylist(",
+    "lines": 1
+  },
+  {
+    "id": "playlists/[id] DELETE: error response",
+    "file": "app/api/playlists/[id]/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "return NextResponse.json(e, { status: 500 });",
+    "lines": 1,
+    "occurrence": 2,
+    "stub": [
+      "return NextResponse.json({ success: true });"
+    ]
+  },
+  {
+    "id": "playlists/[id]/items GET: auth guard",
+    "file": "app/api/playlists/[id]/items/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "if (!session?.access_token) {",
+    "lines": 3,
+    "occurrence": 1
+  },
+  {
+    "id": "playlists/[id]/items GET: getPlaylistItems call",
+    "file": "app/api/playlists/[id]/items/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "const result = await getPlaylistItems(",
+    "lines": 1,
+    "stub": [
+      "const result = { data: { items: [] as unknown[] } };"
+    ]
+  },
+  {
+    "id": "playlists/[id]/items GET: empty fallback",
+    "file": "app/api/playlists/[id]/items/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "return NextResponse.json(result.data.items ?? []);",
+    "lines": 1,
+    "stub": [
+      "return NextResponse.json(result.data.items ?? null);"
+    ]
+  },
+  {
+    "id": "playlists/[id]/items GET: error response",
+    "file": "app/api/playlists/[id]/items/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "return NextResponse.json(e, { status: 500 });",
+    "lines": 1,
+    "occurrence": 1,
+    "stub": [
+      "return NextResponse.json({ success: true });"
+    ]
+  },
+  {
+    "id": "playlists/[id]/items POST: auth guard",
+    "file": "app/api/playlists/[id]/items/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "if (!session?.access_token) {",
+    "lines": 3,
+    "occurrence": 2
+  },
+  {
+    "id": "playlists/[id]/items POST: videoId validation",
+    "file": "app/api/playlists/[id]/items/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "if (!body.videoId?.trim()) {",
+    "lines": 3
+  },
+  {
+    "id": "playlists/[id]/items POST: addToPlaylist call",
+    "file": "app/api/playlists/[id]/items/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "const result = await addToPlaylist(",
+    "lines": 1,
+    "stub": [
+      "const result = { data: {} };"
+    ]
+  },
+  {
+    "id": "playlists/[id]/items POST: videoId trim",
+    "file": "app/api/playlists/[id]/items/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "const result = await addToPlaylist(",
+    "lines": 1,
+    "stub": [
+      "const result = await addToPlaylist(session.access_token, params.id, body.videoId);"
+    ]
+  },
+  {
+    "id": "playlists/[id]/items POST: error response",
+    "file": "app/api/playlists/[id]/items/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "return NextResponse.json(e, { status: 500 });",
+    "lines": 1,
+    "occurrence": 2,
+    "stub": [
+      "return NextResponse.json({ success: true });"
+    ]
+  },
+  {
+    "id": "playlists/[id]/items/[itemId] DELETE: auth guard",
+    "file": "app/api/playlists/[id]/items/[itemId]/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "if (!session?.access_token) {",
+    "lines": 3,
+    "occurrence": 1
+  },
+  {
+    "id": "playlists/[id]/items/[itemId] DELETE: removeFromPlaylist call",
+    "file": "app/api/playlists/[id]/items/[itemId]/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "await removeFromPlaylist(",
+    "lines": 1
+  },
+  {
+    "id": "playlists/[id]/items/[itemId] DELETE: error response",
+    "file": "app/api/playlists/[id]/items/[itemId]/route.ts",
+    "test": "tests/unit/api/playlists/playlists.test.ts",
+    "start": "return NextResponse.json(e, { status: 500 });",
+    "lines": 1,
+    "occurrence": 1,
+    "stub": [
+      "return NextResponse.json({ success: true });"
+    ]
+  },
+  {
+    "id": "playlists/membership: auth guard",
+    "file": "app/api/playlists/membership/route.ts",
+    "test": "tests/unit/api/playlists/membership.test.ts",
+    "start": "if (!session?.access_token) {",
+    "lines": 3,
+    "occurrence": 1
+  },
+  {
+    "id": "playlists/membership: videoId guard",
+    "file": "app/api/playlists/membership/route.ts",
+    "test": "tests/unit/api/playlists/membership.test.ts",
+    "start": "if (!videoId) {",
+    "lines": 3
+  },
+  {
+    "id": "playlists/membership: membership check",
+    "file": "app/api/playlists/membership/route.ts",
+    "test": "tests/unit/api/playlists/membership.test.ts",
+    "start": "const found = (items.data.items ?? []).some(",
+    "lines": 3,
+    "stub": [
+      "const found = true;"
+    ]
+  },
+  {
+    "id": "playlists/membership: allSettled tolerance",
+    "file": "app/api/playlists/membership/route.ts",
+    "test": "tests/unit/api/playlists/membership.test.ts",
+    "start": "const checks = await Promise.allSettled(",
+    "lines": 1,
+    "stub": [
+      "const checks: any[] = await Promise.all("
+    ]
+  },
+  {
+    "id": "playlists/membership: swallowed error",
+    "file": "app/api/playlists/membership/route.ts",
+    "test": "tests/unit/api/playlists/membership.test.ts",
+    "start": "return NextResponse.json([], { status: 200 });",
+    "lines": 1,
+    "stub": [
+      "return NextResponse.json(e, { status: 500 });"
+    ]
+  },
+  {
+    "id": "health: missing detection",
+    "file": "app/api/health/route.ts",
+    "test": "tests/unit/api/health-releases.test.ts",
+    "start": "const missing = checks.filter((c) => !c.set).map((c) => c.key);",
+    "lines": 1,
+    "stub": [
+      "const missing: string[] = [];"
+    ]
+  },
+  {
+    "id": "health: missing list in body",
+    "file": "app/api/health/route.ts",
+    "test": "tests/unit/api/health-releases.test.ts",
+    "start": "...(missing.length > 0 && { missing }),",
+    "lines": 1
+  },
+  {
+    "id": "health: 503 when degraded",
+    "file": "app/api/health/route.ts",
+    "test": "tests/unit/api/health-releases.test.ts",
+    "start": "return NextResponse.json(body, { status: healthy ? 200 : 503 });",
+    "lines": 1,
+    "stub": [
+      "return NextResponse.json(body);"
+    ]
+  },
+  {
+    "id": "releases/latest: non-ok guard",
+    "file": "app/api/releases/latest/route.ts",
+    "test": "tests/unit/api/health-releases.test.ts",
+    "start": "if (!res.ok) {",
+    "lines": 3
+  },
+  {
+    "id": "releases/latest: strip leading v",
+    "file": "app/api/releases/latest/route.ts",
+    "test": "tests/unit/api/health-releases.test.ts",
+    "start": "const version = tag.startsWith('v') ? tag.slice(1) : tag;",
+    "lines": 1,
+    "stub": [
+      "const version = tag;"
+    ]
+  },
+  {
+    "id": "releases/latest: incomplete data guard",
+    "file": "app/api/releases/latest/route.ts",
+    "test": "tests/unit/api/health-releases.test.ts",
+    "start": "if (!version || !data.html_url) {",
+    "lines": 3
+  },
+  {
+    "id": "releases/latest: thrown fetch is a 502",
+    "file": "app/api/releases/latest/route.ts",
+    "test": "tests/unit/api/health-releases.test.ts",
+    "start": "return NextResponse.json({ error: 'Failed to fetch latest release.' }, { status: 502 });",
+    "lines": 1,
+    "occurrence": 2,
+    "stub": [
+      "throw new Error('mutated');"
+    ]
+  },
+  {
+    "id": "lib/utils: formatStreams no-items guard",
+    "file": "lib/utils.ts",
+    "test": "tests/unit/lib/utils.test.ts",
+    "start": "if (!data?.data?.items) return [];",
+    "lines": 1
+  },
+  {
+    "id": "lib/utils: isLive",
+    "file": "lib/utils.ts",
+    "test": "tests/unit/lib/utils.test.ts",
+    "start": "isLive: status.lifeCycleStatus === 'live',",
+    "lines": 1,
+    "stub": [
+      "isLive: false,"
+    ]
+  },
+  {
+    "id": "lib/utils: isComplete",
+    "file": "lib/utils.ts",
+    "test": "tests/unit/lib/utils.test.ts",
+    "start": "isComplete: status.lifeCycleStatus === 'complete',",
+    "lines": 1,
+    "stub": [
+      "isComplete: false,"
+    ]
+  },
+  {
+    "id": "lib/utils: streamKeyName lookup",
+    "file": "lib/utils.ts",
+    "test": "tests/unit/lib/utils.test.ts",
+    "start": "streamKeyName: boundStreamId ?",
+    "lines": 1,
+    "stub": [
+      "streamKeyName: undefined,"
+    ]
+  },
+  {
+    "id": "lib/utils: playlist thumbnail fallback",
+    "file": "lib/utils.ts",
+    "test": "tests/unit/lib/utils.test.ts",
+    "start": "thumbnail: (thumbnails?.medium ?? thumbnails?.default) as FormattedPlaylist['thumbnail'],",
+    "lines": 1,
+    "stub": [
+      "thumbnail: thumbnails?.medium as any,"
+    ]
+  },
+  {
+    "id": "lib/utils: playlist itemCount default",
+    "file": "lib/utils.ts",
+    "test": "tests/unit/lib/utils.test.ts",
+    "start": "itemCount: (contentDetails?.itemCount as number) ?? 0,",
+    "lines": 1,
+    "stub": [
+      "itemCount: contentDetails?.itemCount as number,"
+    ]
+  },
+  {
+    "id": "lib/utils: item videoId fallback",
+    "file": "lib/utils.ts",
+    "test": "tests/unit/lib/utils.test.ts",
+    "start": "videoId: (resourceId?.videoId as string) ?? (contentDetails?.videoId as string) ?? '',",
+    "lines": 1,
+    "stub": [
+      "videoId: resourceId?.videoId as string,"
+    ]
+  },
+  {
+    "id": "lib/utils: datetime-local padding",
+    "file": "lib/utils.ts",
+    "test": "tests/unit/lib/utils.test.ts",
+    "start": "const pad = (n: number) => String(n).padStart(2, '0');",
+    "lines": 1,
+    "stub": [
+      "const pad = (n: number) => String(n);"
+    ]
+  },
+  {
+    "id": "lib/stream: startTime to ISO",
+    "file": "lib/stream.ts",
+    "test": "tests/unit/lib/stream.test.ts",
+    "start": ": new Date(request.startTime).toISOString()",
+    "lines": 1,
+    "stub": [
+      ": request.startTime"
+    ]
+  },
+  {
+    "id": "lib/stream: autoStart string coercion",
+    "file": "lib/stream.ts",
+    "test": "tests/unit/lib/stream.test.ts",
+    "start": "request.autoStart === 'true' ||",
+    "lines": 1
+  },
+  {
+    "id": "lib/stream: autoStop fallback to existing",
+    "file": "lib/stream.ts",
+    "test": "tests/unit/lib/stream.test.ts",
+    "start": "(request.autoStop === undefined && ytStream.contentDetails.enableAutoStop),",
+    "lines": 1,
+    "stub": [
+      "false,"
+    ]
+  },
+  {
+    "id": "lib/stream: privacy override",
+    "file": "lib/stream.ts",
+    "test": "tests/unit/lib/stream.test.ts",
+    "start": "privacyStatus: request.privacyStatus ?? ytStream.status.privacyStatus,",
+    "lines": 1,
+    "stub": [
+      "privacyStatus: ytStream.status.privacyStatus,"
+    ]
+  },
+  {
+    "id": "lib/authOptions: store tokens on sign-in",
+    "file": "lib/authOptions.ts",
+    "test": "tests/unit/lib/authOptions.test.ts",
+    "start": "if (account) {",
+    "lines": 8
+  },
+  {
+    "id": "lib/authOptions: skip refresh while valid",
+    "file": "lib/authOptions.ts",
+    "test": "tests/unit/lib/authOptions.test.ts",
+    "start": "if (Date.now() < (token.expires_at as number) * 1000) {",
+    "lines": 3
+  },
+  {
+    "id": "lib/authOptions: non-ok refresh throws",
+    "file": "lib/authOptions.ts",
+    "test": "tests/unit/lib/authOptions.test.ts",
+    "start": "if (!response.ok) throw tokens;",
+    "lines": 1
+  },
+  {
+    "id": "lib/authOptions: rotated refresh token",
+    "file": "lib/authOptions.ts",
+    "test": "tests/unit/lib/authOptions.test.ts",
+    "start": "refresh_token: (tokens.refresh_token as string | undefined) ?? token.refresh_token,",
+    "lines": 1,
+    "stub": [
+      "refresh_token: token.refresh_token,"
+    ]
+  },
+  {
+    "id": "lib/authOptions: session exposes error",
+    "file": "lib/authOptions.ts",
+    "test": "tests/unit/lib/authOptions.test.ts",
+    "start": "if (token.error) session.error = token.error as string;",
+    "lines": 1
+  },
+  {
+    "id": "lib/authOptions: session exposes access token",
+    "file": "lib/authOptions.ts",
+    "test": "tests/unit/lib/authOptions.test.ts",
+    "start": "session.access_token = token.access_token as string;",
+    "lines": 1
+  },
+  {
+    "id": "lib/youtube: access token on client",
+    "file": "lib/youtube.ts",
+    "test": "tests/unit/lib/youtube.test.ts",
+    "start": "auth.setCredentials({ access_token: accessToken });",
+    "lines": 1
+  },
+  {
+    "id": "lib/youtube: getStreams default status",
+    "file": "lib/youtube.ts",
+    "test": "tests/unit/lib/youtube.test.ts",
+    "start": "status: StreamStatus = STATUS.UPCOMING,",
+    "lines": 1,
+    "stub": [
+      "status: StreamStatus = STATUS.ACTIVE,"
+    ]
+  },
+  {
+    "id": "lib/youtube: createStream DVR default",
+    "file": "lib/youtube.ts",
+    "test": "tests/unit/lib/youtube.test.ts",
+    "start": "enableDvr: true,",
+    "lines": 1,
+    "stub": [
+      "enableDvr: false,"
+    ]
+  },
+  {
+    "id": "lib/youtube: no bound stream → null",
+    "file": "lib/youtube.ts",
+    "test": "tests/unit/lib/youtube.test.ts",
+    "start": "if (!boundStreamId) return null;",
+    "lines": 1
+  },
+  {
+    "id": "lib/youtube: missing live stream → null",
+    "file": "lib/youtube.ts",
+    "test": "tests/unit/lib/youtube.test.ts",
+    "start": "if (!liveStream) return null;",
+    "lines": 1
+  },
+  {
+    "id": "lib/youtube: empty ids short-circuit",
+    "file": "lib/youtube.ts",
+    "test": "tests/unit/lib/youtube.test.ts",
+    "start": "if (streamIds.length === 0) return [];",
+    "lines": 1
+  },
+  {
+    "id": "lib/playlists: access token on client",
+    "file": "lib/playlists.ts",
+    "test": "tests/unit/lib/playlists.test.ts",
+    "start": "auth.setCredentials({ access_token: accessToken });",
+    "lines": 1
+  },
+  {
+    "id": "lib/playlists: video resource kind",
+    "file": "lib/playlists.ts",
+    "test": "tests/unit/lib/playlists.test.ts",
+    "start": "kind: 'youtube#video',",
+    "lines": 1
+  }
+]

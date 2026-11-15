@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { GET } from '@/app/api/playlists/membership/route';
-import { getPlaylistItems, getPlaylists } from '@/lib/playlists';
+import { getPlaylistItems, getPlaylists } from '@/tests/unit/helpers/youtube-service';
 import { listResponse } from '../../fixtures/youtube';
 import { makeRequest } from '../../helpers/request';
 import { signedIn, signedOut, TEST_TOKEN } from '../../helpers/session';
 
 vi.mock('next-auth', () => ({ getServerSession: vi.fn() }));
 vi.mock('@/lib/authOptions', () => ({ authOptions: {} }));
-vi.mock('@/lib/playlists', () => ({ getPlaylists: vi.fn(), getPlaylistItems: vi.fn() }));
+vi.mock('@/lib/services/youtube', () => import('@/tests/unit/helpers/youtube-service'));
 
 const get = (query = '?videoId=vid-1') => GET(makeRequest(`/api/playlists/membership${query}`));
 const item = (videoId: string) => ({ snippet: { resourceId: { videoId } } });

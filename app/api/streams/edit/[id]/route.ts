@@ -1,7 +1,6 @@
 import { authOptions } from '@/lib/authOptions';
-import { addToPlaylist } from '@/lib/playlists';
+import { getYouTubeService } from '@/lib/services/youtube';
 import { Stream, type StreamRequest, type YouTubeStreamData } from '@/lib/stream';
-import { bindBroadcastToStream, editStream, getStreamById } from '@/lib/youtube';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -13,6 +12,7 @@ export async function POST(
   if (!session?.access_token) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  const { getStreamById, editStream, bindBroadcastToStream, addToPlaylist } = getYouTubeService();
   try {
     const body = (await req.json()) as StreamRequest & { playlistIds?: string; streamKeyId?: string };
     const apiStream = await getStreamById(session.access_token, body.id);

@@ -1,15 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { POST } from '@/app/api/streams/edit/[id]/route';
-import { addToPlaylist } from '@/lib/playlists';
-import { bindBroadcastToStream, editStream, getStreamById } from '@/lib/youtube';
+import { addToPlaylist, bindBroadcastToStream, editStream, getStreamById } from '@/tests/unit/helpers/youtube-service';
 import { broadcast, listResponse } from '../../fixtures/youtube';
 import { ctx, makeRequest } from '../../helpers/request';
 import { signedIn, signedOut, TEST_TOKEN } from '../../helpers/session';
 
 vi.mock('next-auth', () => ({ getServerSession: vi.fn() }));
 vi.mock('@/lib/authOptions', () => ({ authOptions: {} }));
-vi.mock('@/lib/youtube', () => ({ getStreamById: vi.fn(), editStream: vi.fn(), bindBroadcastToStream: vi.fn() }));
-vi.mock('@/lib/playlists', () => ({ addToPlaylist: vi.fn() }));
+vi.mock('@/lib/services/youtube', () => import('@/tests/unit/helpers/youtube-service'));
 
 const post = (body: unknown, id = 'vid-1') =>
   POST(makeRequest(`/api/streams/edit/${id}`, { method: 'POST', body }), ctx({ id }));

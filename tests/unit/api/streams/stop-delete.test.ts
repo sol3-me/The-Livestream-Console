@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { DELETE } from '@/app/api/streams/delete/[id]/route';
 import { POST as STOP } from '@/app/api/streams/stop/[id]/route';
-import { deleteStream, stopStreamById } from '@/lib/youtube';
+import { deleteStream, stopStreamById } from '@/tests/unit/helpers/youtube-service';
 import { ctx, makeRequest } from '../../helpers/request';
 import { signedIn, signedOut, TEST_TOKEN } from '../../helpers/session';
 
 vi.mock('next-auth', () => ({ getServerSession: vi.fn() }));
 vi.mock('@/lib/authOptions', () => ({ authOptions: {} }));
-vi.mock('@/lib/youtube', () => ({ stopStreamById: vi.fn(), deleteStream: vi.fn() }));
+vi.mock('@/lib/services/youtube', () => import('@/tests/unit/helpers/youtube-service'));
 
 const stop = (id = 'vid-1') => STOP(makeRequest(`/api/streams/stop/${id}`, { method: 'POST' }), ctx({ id }));
 const del = (id = 'vid-1') => DELETE(makeRequest(`/api/streams/delete/${id}`, { method: 'DELETE' }), ctx({ id }));

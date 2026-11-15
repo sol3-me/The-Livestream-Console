@@ -1,14 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { POST } from '@/app/api/streams/create/route';
-import { addToPlaylist } from '@/lib/playlists';
-import { bindBroadcastToStream, createStream } from '@/lib/youtube';
+import { addToPlaylist, bindBroadcastToStream, createStream } from '@/tests/unit/helpers/youtube-service';
 import { makeRequest } from '../../helpers/request';
 import { signedIn, signedInWithoutToken, signedOut, TEST_TOKEN } from '../../helpers/session';
 
 vi.mock('next-auth', () => ({ getServerSession: vi.fn() }));
 vi.mock('@/lib/authOptions', () => ({ authOptions: {} }));
-vi.mock('@/lib/youtube', () => ({ createStream: vi.fn(), bindBroadcastToStream: vi.fn() }));
-vi.mock('@/lib/playlists', () => ({ addToPlaylist: vi.fn() }));
+vi.mock('@/lib/services/youtube', () => import('@/tests/unit/helpers/youtube-service'));
 
 const validBody = {
   title: '  My Stream  ',

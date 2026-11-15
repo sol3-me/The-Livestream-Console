@@ -11,22 +11,14 @@ import {
   getPlaylists,
   removeFromPlaylist,
   updatePlaylist,
-} from '@/lib/playlists';
+} from '@/tests/unit/helpers/youtube-service';
 import { listResponse } from '../../fixtures/youtube';
 import { ctx, makeRequest } from '../../helpers/request';
 import { signedIn, signedOut, TEST_TOKEN } from '../../helpers/session';
 
 vi.mock('next-auth', () => ({ getServerSession: vi.fn() }));
 vi.mock('@/lib/authOptions', () => ({ authOptions: {} }));
-vi.mock('@/lib/playlists', () => ({
-  getPlaylists: vi.fn(),
-  getPlaylistItems: vi.fn(),
-  addToPlaylist: vi.fn(),
-  removeFromPlaylist: vi.fn(),
-  createPlaylist: vi.fn(),
-  updatePlaylist: vi.fn(),
-  deletePlaylist: vi.fn(),
-}));
+vi.mock('@/lib/services/youtube', () => import('@/tests/unit/helpers/youtube-service'));
 
 const ytError = { code: 403, errors: [{ message: 'forbidden' }] };
 const quietErrors = () => vi.spyOn(console, 'error').mockImplementation(() => {});

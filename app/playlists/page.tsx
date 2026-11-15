@@ -1,6 +1,6 @@
 import PlaylistsClient from '@/components/PlaylistsClient';
 import { authOptions } from '@/lib/authOptions';
-import { getPlaylists } from '@/lib/playlists';
+import { getYouTubeService } from '@/lib/services/youtube';
 import type { FormattedPlaylist } from '@/lib/types';
 import { formatPlaylists } from '@/lib/utils';
 import { getServerSession } from 'next-auth';
@@ -10,6 +10,7 @@ export default async function PlaylistsPage() {
     const session = await getServerSession(authOptions);
     if (!session) redirect('/login');
     if (session.error === 'RefreshAccessTokenError') redirect('/api/auth/signin');
+    const { getPlaylists } = getYouTubeService();
 
     let playlists: FormattedPlaylist[] = [];
 

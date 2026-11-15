@@ -1,14 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { GET as GET_KEY } from '@/app/api/streams/[id]/streamkey/route';
 import { GET as GET_KEYS } from '@/app/api/streams/keys/route';
-import { getLiveStreamByBroadcastId, getMyLiveStreams } from '@/lib/youtube';
+import { getLiveStreamByBroadcastId, getMyLiveStreams } from '@/tests/unit/helpers/youtube-service';
 import { liveStream } from '../../fixtures/youtube';
 import { ctx, makeRequest } from '../../helpers/request';
 import { signedIn, signedOut, TEST_TOKEN } from '../../helpers/session';
 
 vi.mock('next-auth', () => ({ getServerSession: vi.fn() }));
 vi.mock('@/lib/authOptions', () => ({ authOptions: {} }));
-vi.mock('@/lib/youtube', () => ({ getMyLiveStreams: vi.fn(), getLiveStreamByBroadcastId: vi.fn() }));
+vi.mock('@/lib/services/youtube', () => import('@/tests/unit/helpers/youtube-service'));
 
 describe('GET /api/streams/keys', () => {
   beforeEach(() => signedIn());

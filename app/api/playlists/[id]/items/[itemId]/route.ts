@@ -1,5 +1,5 @@
 import { authOptions } from '@/lib/authOptions';
-import { removeFromPlaylist } from '@/lib/playlists';
+import { getYouTubeService } from '@/lib/services/youtube';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -11,6 +11,7 @@ export async function DELETE(
     if (!session?.access_token) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    const { removeFromPlaylist } = getYouTubeService();
     try {
         await removeFromPlaylist(session.access_token, params.itemId);
         return NextResponse.json({ success: true });

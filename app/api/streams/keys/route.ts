@@ -1,6 +1,6 @@
 import { authOptions } from '@/lib/authOptions';
+import { getYouTubeService } from '@/lib/services/youtube';
 import type { AvailableStreamKey } from '@/lib/types';
-import { getMyLiveStreams } from '@/lib/youtube';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 
@@ -9,6 +9,7 @@ export async function GET() {
   if (!session?.access_token) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  const { getMyLiveStreams } = getYouTubeService();
   try {
     const items = await getMyLiveStreams(session.access_token);
     const keys: AvailableStreamKey[] = items.map((s) => ({

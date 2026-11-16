@@ -1,5 +1,5 @@
 import { authOptions } from '@/lib/authOptions';
-import { getPlaylistItems, getPlaylists } from '@/lib/playlists';
+import { getYouTubeService } from '@/lib/services/youtube';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -8,6 +8,7 @@ export async function GET(req: NextRequest) {
     if (!session?.access_token) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    const { getPlaylists, getPlaylistItems } = getYouTubeService();
 
     const videoId = req.nextUrl.searchParams.get('videoId');
     if (!videoId) {

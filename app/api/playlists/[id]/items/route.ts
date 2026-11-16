@@ -1,5 +1,5 @@
 import { authOptions } from '@/lib/authOptions';
-import { addToPlaylist, getPlaylistItems } from '@/lib/playlists';
+import { getYouTubeService } from '@/lib/services/youtube';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -11,6 +11,7 @@ export async function GET(
     if (!session?.access_token) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    const { getPlaylistItems } = getYouTubeService();
     try {
         const result = await getPlaylistItems(session.access_token, params.id);
         return NextResponse.json(result.data.items ?? []);
@@ -32,6 +33,7 @@ export async function POST(
     if (!session?.access_token) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    const { addToPlaylist } = getYouTubeService();
     try {
         const body = (await req.json()) as AddItemBody;
         if (!body.videoId?.trim()) {

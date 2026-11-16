@@ -1,8 +1,8 @@
 import DashboardClient from '@/components/DashboardClient';
 import { authOptions } from '@/lib/authOptions';
+import { getYouTubeService } from '@/lib/services/youtube';
 import type { FormattedStream } from '@/lib/types';
 import { formatStreams } from '@/lib/utils';
-import { getLiveStreamsByIds, getStreams } from '@/lib/youtube';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 
@@ -12,6 +12,7 @@ type BroadcastsResponse = { data?: { items?: BroadcastItem[] } };
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
   if (!session) redirect('/login');
+  const { getStreams, getLiveStreamsByIds } = getYouTubeService();
 
   let activeStreams: FormattedStream[] = [];
   let completedStreams: FormattedStream[] = [];

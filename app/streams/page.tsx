@@ -1,9 +1,9 @@
 import StreamsClient from '@/components/StreamsClient';
 import { authOptions } from '@/lib/authOptions';
 import { streamStatus } from '@/lib/constants';
+import { getYouTubeService } from '@/lib/services/youtube';
 import type { StreamsData, StreamsPageError } from '@/lib/types';
 import { formatStreams, parallelAsync } from '@/lib/utils';
-import { getLiveStreamsByIds, getStreams } from '@/lib/youtube';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 
@@ -12,6 +12,7 @@ export default async function StreamsPage() {
   if (!session) redirect('/login');
   // Force re-login if the refresh token is exhausted
   if (session.error === 'RefreshAccessTokenError') redirect('/api/auth/signin');
+  const { getStreams, getLiveStreamsByIds } = getYouTubeService();
 
   let streamsData: StreamsData | null = null;
   let error: StreamsPageError | null = null;

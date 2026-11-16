@@ -128,9 +128,10 @@ Per route, at minimum: 401 when there's no session; the happy path calls the dep
 
 **Constraint: the self-hosted runner only, at zero cost.** No GitHub-hosted runners.
 
-- [ ] Add a test job (lint, unit, E2E in fake mode) that runs on `[self-hosted, Linux, X64]`.
-- [ ] Make the deploy job `needs:` the test job, so `master` can't deploy red.
-- [ ] Optional: run the same job on PRs, but **only for same-repo branches**. Guard it with `github.event.pull_request.head.repo.full_name == github.repository` and never use `pull_request_target`. This is a public repo, and a fork PR running on a self-hosted runner executes the contributor's code on your machine. GitHub's own docs warn against self-hosted runners on public repos for exactly this reason. The existing deploy workflow already guards against this.
+- [x] Add a test job that runs on `[self-hosted, Linux, X64]`. It is the Dockerfile `test` stage (lint, `tsc`, unit tests and `test:verify`), run with `docker build --target test .`. The runner host has Docker but no Node. `setup-node` would re-download Node into a non-persistent tool cache, and `container:` jobs or bind mounts break unless the runner workdir path is identical on the host. A build stage needs neither. Locally: `npm run test:docker`.
+- [ ] Add E2E in fake mode to the test job (lands with 1E).
+- [x] Make the deploy job `needs:` the test job, so `master` can't deploy red.
+- [x] Run the same job on PRs (`tests.yml`), but **only for same-repo branches**. Guard it with `github.event.pull_request.head.repo.full_name == github.repository` and never use `pull_request_target`. This is a public repo, and a fork PR running on a self-hosted runner executes the contributor's code on your machine. GitHub's own docs warn against self-hosted runners on public repos for exactly this reason. The existing deploy workflow already guards against this.
 - [ ] Playwright browsers in the runner container: install them once into the runner's persistent volume (or run E2E in the official Playwright Docker image) so each run doesn't re-download them.
 
 ## 4. Phase 2: UX/UI improvements (to discuss after Phase 1)

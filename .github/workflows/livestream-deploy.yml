@@ -12,7 +12,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  test:
+    # Lint, typecheck, unit tests and the comment-out verifier, run inside the
+    # Dockerfile's `test` stage (the runner host has Docker but no Node).
+    if: |
+      github.repository == 'sol3-me/The-Livestream-Console' &&
+      github.ref == 'refs/heads/master'
+    runs-on: [self-hosted, Linux, X64]
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Run tests in the deploy image
+        run: docker build --target test --progress=plain .
+
   deploy:
+    # master can't deploy red: this job only starts once `test` passes.
+    needs: test
     # Only run on the canonical repo and only on master.
     # This prevents fork PRs or copies of this workflow from executing
     # on the self-hosted runner.

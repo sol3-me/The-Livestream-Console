@@ -19,7 +19,23 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
-# ── 3. Production image ───────────────────────────────────────────────────────
+# ── 3. Test (CI only, never part of the production image) ─────────────────────
+# Run with `docker build --target test .` (or `npm run test:docker`).
+# Must stay above the runner stage: the last stage is the default build target,
+# and BuildKit skips stages the target doesn't need, so this adds nothing to a
+# normal `docker build .`.
+FROM deps AS test
+WORKDIR /app
+
+COPY . .
+
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN npm run lint \
+ && npx tsc --noEmit \
+ && npm test \
+ && npm run test:verify
+
+# ── 4. Production image ───────────────────────────────────────────────────────
 FROM node:24-alpine AS runner
 WORKDIR /app
 

@@ -1,0 +1,55 @@
+{
+  "description": "Scheduled broadcasts only: one bound and ready, one unbound draft. Nothing live or completed. Drives create, edit and delete.",
+  "streamKeys": [
+    {
+      "id": "key-main",
+      "title": "Main (1080p60)",
+      "streamName": "fake-main-abcd-efgh-ijkl",
+      "ingestionAddress": "rtmp://a.rtmp.youtube.com/live2",
+      "resolution": "1080p",
+      "frameRate": "60fps",
+      "ingestionType": "rtmp"
+    },
+    {
+      "id": "key-backup",
+      "title": "Backup (720p30)",
+      "streamName": "fake-backup-mnop-qrst-uvwx",
+      "ingestionAddress": "rtmp://a.rtmp.youtube.com/live2",
+      "resolution": "720p",
+      "frameRate": "30fps",
+      "ingestionType": "rtmp"
+    }
+  ],
+  "broadcasts": [
+    {
+      "id": "upcoming-ready-1",
+      "title": "Saturday Speedruns",
+      "description": "Bound to the main key, auto-start on.",
+      "lifeCycleStatus": "ready",
+      "privacyStatus": "unlisted",
+      "scheduledStartOffsetMinutes": 1440,
+      "enableAutoStart": true,
+      "enableAutoStop": false,
+      "boundStreamId": "key-main"
+    },
+    {
+      "id": "upcoming-created-1",
+      "title": "Unbound Draft Stream",
+      "description": "No stream key yet.",
+      "lifeCycleStatus": "created",
+      "privacyStatus": "private",
+      "scheduledStartOffsetMinutes": 4320,
+      "enableAutoStart": false,
+      "enableAutoStop": false
+    }
+  ],
+  "playlists": [
+    {
+      "id": "pl-series",
+      "title": "Weekend Series",
+      "description": "",
+      "privacyStatus": "unlisted",
+      "videoIds": []
+    }
+  ]
+}

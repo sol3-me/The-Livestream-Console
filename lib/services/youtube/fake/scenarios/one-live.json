@@ -1,0 +1,30 @@
+{
+  "description": "Exactly one broadcast, live now and bound to a key. Drives the featured live stream and the Stop flow.",
+  "streamKeys": [
+    {
+      "id": "key-main",
+      "title": "Main (1080p60)",
+      "streamName": "fake-main-abcd-efgh-ijkl",
+      "ingestionAddress": "rtmp://a.rtmp.youtube.com/live2",
+      "backupIngestionAddress": "rtmp://b.rtmp.youtube.com/live2?backup=1",
+      "resolution": "1080p",
+      "frameRate": "60fps",
+      "ingestionType": "rtmp"
+    }
+  ],
+  "broadcasts": [
+    {
+      "id": "live-1",
+      "title": "Friday Night Stream",
+      "description": "Live right now.",
+      "lifeCycleStatus": "live",
+      "privacyStatus": "public",
+      "scheduledStartOffsetMinutes": -30,
+      "actualStartOffsetMinutes": -25,
+      "enableAutoStart": true,
+      "enableAutoStop": true,
+      "boundStreamId": "key-main"
+    }
+  ],
+  "playlists": []
+}

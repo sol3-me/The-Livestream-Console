@@ -41,4 +41,21 @@ export async function register() {
     }
 
     console.log('[TLC] ─────────────────────────────────────────────────\n');
+
+    reportYouTubeMode(process.env.TLC_YOUTUBE_MODE ?? '');
+}
+
+/** Makes fake mode impossible to miss in the logs, and catches a mistyped mode at boot. */
+function reportYouTubeMode(mode: string) {
+    if (mode === 'fake') {
+        console.warn('[TLC] ************************************************************');
+        console.warn('[TLC] *  FAKE YOUTUBE MODE (TLC_YOUTUBE_MODE=fake)');
+        console.warn('[TLC] *  No real YouTube calls are made. Data is in-memory test data');
+        console.warn('[TLC] *  and /api/test-support/scenario can reset it. Never use this');
+        console.warn('[TLC] *  in production.');
+        console.warn('[TLC] ************************************************************');
+    } else if (mode !== '' && mode !== 'google') {
+        console.error(`[TLC] Invalid TLC_YOUTUBE_MODE "${mode}". Use "google" (default) or "fake".`);
+        console.error('[TLC] Every YouTube request will fail until this is fixed.');
+    }
 }

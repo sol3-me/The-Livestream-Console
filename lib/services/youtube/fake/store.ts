@@ -15,6 +15,6 @@ export function getFakeStore(): FakeStore {
 }
 
 /** Replaces the shared store with a fresh copy of a named scenario (the default one if omitted). */
-export function resetFakeStore(_name: ScenarioName = DEFAULT_SCENARIO, now: Date = new Date()): void {
-  (globalThis as Holder)[KEY] = createFakeStore(SCENARIOS[DEFAULT_SCENARIO], now);
+export function resetFakeStore(name: ScenarioName = DEFAULT_SCENARIO, now: Date = new Date()): void {
+  (globalThis as Holder)[KEY] = createFakeStore(SCENARIOS[name], now);
 }

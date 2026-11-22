@@ -44,6 +44,8 @@ export interface FakeStore {
   playlists: youtube_v3.Schema$Playlist[];
   playlistItems: youtube_v3.Schema$PlaylistItem[];
   nextId: number;
+  /** Copied from the scenario: when set, every service call rejects with this error. */
+  failWith?: FakeScenario['failWith'];
 }
 
 const at = (now: Date, offsetMinutes: number) => new Date(now.getTime() + offsetMinutes * 60_000).toISOString();
@@ -117,7 +119,7 @@ export function createFakeStore(scenario: FakeScenario, now: Date): FakeStore {
     });
   }
 
-  return { broadcasts, liveStreams, playlists, playlistItems, nextId: 1 };
+  return { broadcasts, liveStreams, playlists, playlistItems, nextId: 1, failWith: scenario.failWith };
 }
 
 /** The contentDetails values lib/youtube.ts createStream always sends. */

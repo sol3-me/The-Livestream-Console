@@ -1,3 +1,4 @@
+import type { FormattedStream } from '@/lib/types';
 /** Minimal YouTube API shapes used across unit tests. */
 
 export function broadcast(overrides: Record<string, unknown> = {}) {
@@ -44,3 +45,22 @@ export function liveStream(overrides: Record<string, unknown> = {}) {
 }
 
 export const listResponse = <T>(items: T[] | undefined) => ({ data: { items } });
+
+/** A FormattedStream as the UI components receive it (after formatStreams). */
+export function formattedStream(overrides: Partial<FormattedStream> = {}): FormattedStream {
+  return {
+    id: 'vid-1',
+    title: 'Friday Night Stream',
+    description: 'desc',
+    startTime: '2026-12-01T18:30:00Z',
+    enableAutoStart: false,
+    enableAutoStop: false,
+    status: 'ready',
+    isLive: false,
+    isComplete: false,
+    privacyStatus: 'unlisted',
+    videoLink: 'https://youtu.be/vid-1',
+    controlRoomLink: 'https://studio.youtube.com/video/vid-1/livestreaming',
+    ...overrides,
+  };
+}

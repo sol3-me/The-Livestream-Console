@@ -1,6 +1,7 @@
 'use client';
 import type { FormattedStream } from '@/lib/types';
 import { toLocalDatetime } from '@/lib/utils';
+import PrivacyBadge from './PrivacyBadge';
 
 interface StreamTableRowProps {
     stream: FormattedStream;
@@ -38,14 +39,7 @@ export default function StreamTableRow({ stream, onEdit, onDelete, onCopy, selec
                 {toLocalDatetime(stream.startTime)}
             </td>
             <td className="py-3 px-4">
-                <span className={`inline-block text-xs px-2 py-0.5 rounded-full font-medium ${stream.privacyStatus === 'public'
-                    ? 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400'
-                    : stream.privacyStatus === 'unlisted'
-                        ? 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-400'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
-                    }`}>
-                    {stream.privacyStatus}
-                </span>
+                <PrivacyBadge status={stream.privacyStatus} />
             </td>
             <td className="py-3 px-4">
                 {stream.streamKeyName ? (

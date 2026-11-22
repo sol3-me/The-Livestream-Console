@@ -11,7 +11,7 @@ import StopStreamModal from './modals/StopStreamModal';
 
 type Timeframe = 'day' | '7d' | '30d';
 
-const TF_LABELS: Record<Timeframe, string> = { day: 'Today', '7d': '7 Days', '30d': '30 Days' };
+const TF_LABELS: Record<Timeframe, string> = { day: '24 Hours', '7d': '7 Days', '30d': '30 Days' };
 
 function getTimeframeCutoff(tf: Timeframe): Date {
   const now = new Date();

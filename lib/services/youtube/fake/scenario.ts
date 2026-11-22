@@ -3,6 +3,8 @@ import type { youtube_v3 } from 'googleapis';
 /** A scenario as written in `scenarios/*.json`. Times are minutes relative to load time. */
 export interface FakeScenario {
   description?: string;
+  /** When set, every service call rejects with this YouTube error (the api-error scenario). */
+  failWith?: { code: number; domain: string; reason: string; message: string };
   streamKeys: {
     id: string;
     title: string;

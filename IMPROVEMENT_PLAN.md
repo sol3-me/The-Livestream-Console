@@ -109,9 +109,14 @@ Per route, at minimum: 401 when there's no session; the happy path calls the dep
 
 - [x] `createFakeYouTubeService` (`lib/services/youtube/fake/`): in-memory state seeded from a JSON scenario (`fake/scenarios/mixed.json`: live, ready, created and complete broadcasts, stream keys, playlists and items). The scenarios sit under `lib/` rather than `tests/fixtures/`, because the app itself loads them in fake mode. Times are minute offsets from load time, so upcoming streams never go stale. Mutations change the in-memory state, so a Playwright flow sees its own writes. The store lives on `globalThis`, so separately bundled routes share it.
 - [x] **Strict:** it enforces the YouTube Data API's documented rules and rejects with the same error shape as googleapis (`code`, `errors[0].reason`). Where the docs are silent, it uses a conservative assumption, marked `Undocumented (assumption)` in the code. See the decisions log. 51 mutation entries cover the rules.
-- [ ] Named scenarios (for example `empty`, `one-live`, `upcoming-only`, `mixed`, `api-error`) selected per test.
-- [ ] A test-only `POST /api/__test__/scenario` endpoint to reset or switch the scenario. It returns 404 unless `TLC_YOUTUBE_MODE=fake`.
-- [ ] `instrumentation.ts` logs a loud warning when fake mode is on.
+- [x] Named scenarios (`fake/scenarios/*.json`), selected per test:
+  - `mixed` (the default)
+  - `empty`
+  - `one-live`
+  - `upcoming-only`
+  - `api-error`: every call rejects with YouTube's 403 `quotaExceeded`
+- [x] A test-only `POST /api/test-support/scenario` endpoint (`{ "scenario": "one-live" }`; no body resets to `mixed`). It returns 404 unless `TLC_YOUTUBE_MODE=fake`. It is not `__test__`, because the App Router treats underscore-prefixed folders as private and never routes them. Smoke-tested over HTTP against the production image in both modes.
+- [x] `instrumentation.ts` logs a boxed warning when fake mode is on, and an error at boot for an invalid `TLC_YOUTUBE_MODE`.
 
 ### 1E. Playwright E2E
 

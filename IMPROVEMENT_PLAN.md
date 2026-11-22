@@ -46,6 +46,8 @@ These are logged rather than fixed silently. Each fix gets its own red test, the
 | B8 | Cleanup | `components/DashboardActions.tsx` | Dead code: nothing imports it. |
 | B10 | Low | `lib/utils.ts` | `toLocalDatetime('garbage')` returns `"Invalid Date"`, and `toDatetimeLocalValue('garbage')` returns `"NaN-NaN-NaNTNaN:NaN"`. `new Date()` never throws on bad input, so neither `try/catch` ever runs. |
 | B9 | Cleanup | `lib/youtube.ts`, `lib/playlists.ts` | `getYoutubeClient` is duplicated. `googleapis@^67` is many majors behind. |
+| B11 | Low | `components/DashboardClient.tsx` | Issue #50. The shortest timeframe was labelled "Today", but it is a rolling 24 hours, and the heading rendered "Completed in today". Relabelled "24 Hours". **Fixed.** |
+| B12 | Low | `components/StreamCard.tsx` | Issue #51. The card view showed no privacy status, though the table view does. The badge is now a shared `PrivacyBadge` used by both. **Fixed.** |
 
 ## 3. Phase 1: Testability groundwork
 

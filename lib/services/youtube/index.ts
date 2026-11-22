@@ -1,3 +1,5 @@
+import { createFakeYouTubeService } from './fake/service';
+import { getFakeStore } from './fake/store';
 import { googleYouTubeService } from './google';
 import type { YouTubeService } from './types';
 
@@ -13,7 +15,7 @@ export function getYouTubeService(): YouTubeService {
     return googleYouTubeService;
   }
   if (mode === 'fake') {
-    throw new Error('TLC_YOUTUBE_MODE=fake is not available yet (Phase 1D).');
+    return createFakeYouTubeService(getFakeStore);
   }
   throw new Error(`Invalid TLC_YOUTUBE_MODE "${mode}". Use "google" (default) or "fake".`);
 }

@@ -1,0 +1,108 @@
+{
+  "description": "One live, two upcoming (one bound and ready, one unbound draft), two completed, two stream keys, three playlists. Times are minutes relative to when the scenario loads.",
+  "streamKeys": [
+    {
+      "id": "key-main",
+      "title": "Main (1080p60)",
+      "streamName": "fake-main-abcd-efgh-ijkl",
+      "ingestionAddress": "rtmp://a.rtmp.youtube.com/live2",
+      "backupIngestionAddress": "rtmp://b.rtmp.youtube.com/live2?backup=1",
+      "resolution": "1080p",
+      "frameRate": "60fps",
+      "ingestionType": "rtmp"
+    },
+    {
+      "id": "key-backup",
+      "title": "Backup (720p30)",
+      "streamName": "fake-backup-mnop-qrst-uvwx",
+      "ingestionAddress": "rtmp://a.rtmp.youtube.com/live2",
+      "resolution": "720p",
+      "frameRate": "30fps",
+      "ingestionType": "rtmp"
+    }
+  ],
+  "broadcasts": [
+    {
+      "id": "live-1",
+      "title": "Friday Night Stream",
+      "description": "Live right now.",
+      "lifeCycleStatus": "live",
+      "privacyStatus": "public",
+      "scheduledStartOffsetMinutes": -30,
+      "actualStartOffsetMinutes": -25,
+      "enableAutoStart": true,
+      "enableAutoStop": true,
+      "boundStreamId": "key-main"
+    },
+    {
+      "id": "upcoming-ready-1",
+      "title": "Saturday Speedruns",
+      "description": "Bound to the main key, auto-start on.",
+      "lifeCycleStatus": "ready",
+      "privacyStatus": "unlisted",
+      "scheduledStartOffsetMinutes": 1440,
+      "enableAutoStart": true,
+      "enableAutoStop": false,
+      "boundStreamId": "key-main"
+    },
+    {
+      "id": "upcoming-created-1",
+      "title": "Unbound Draft Stream",
+      "description": "No stream key yet.",
+      "lifeCycleStatus": "created",
+      "privacyStatus": "private",
+      "scheduledStartOffsetMinutes": 4320,
+      "enableAutoStart": false,
+      "enableAutoStop": false
+    },
+    {
+      "id": "complete-1",
+      "title": "Last Week's Stream",
+      "description": "Finished a week ago.",
+      "lifeCycleStatus": "complete",
+      "privacyStatus": "public",
+      "scheduledStartOffsetMinutes": -10080,
+      "actualStartOffsetMinutes": -10075,
+      "actualEndOffsetMinutes": -9955,
+      "enableAutoStart": true,
+      "enableAutoStop": true,
+      "boundStreamId": "key-backup"
+    },
+    {
+      "id": "complete-2",
+      "title": "Yesterday's Q&A",
+      "description": "Finished yesterday.",
+      "lifeCycleStatus": "complete",
+      "privacyStatus": "unlisted",
+      "scheduledStartOffsetMinutes": -1500,
+      "actualStartOffsetMinutes": -1495,
+      "actualEndOffsetMinutes": -1400,
+      "enableAutoStart": false,
+      "enableAutoStop": true,
+      "boundStreamId": "key-main"
+    }
+  ],
+  "playlists": [
+    {
+      "id": "pl-highlights",
+      "title": "Highlights",
+      "description": "Best bits.",
+      "privacyStatus": "public",
+      "videoIds": ["complete-1", "complete-2"]
+    },
+    {
+      "id": "pl-series",
+      "title": "Friday Series",
+      "description": "Every Friday.",
+      "privacyStatus": "unlisted",
+      "videoIds": ["live-1", "complete-1"]
+    },
+    {
+      "id": "pl-empty",
+      "title": "Empty Playlist",
+      "description": "",
+      "privacyStatus": "private",
+      "videoIds": []
+    }
+  ]
+}

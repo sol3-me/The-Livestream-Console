@@ -955,5 +955,419 @@
     "start": "  createStream,",
     "occurrence": 2,
     "lines": 1
+  },
+  {
+    "id": "fake: upcoming filter states",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "const UPCOMING = ['created', 'ready'];",
+    "lines": 1,
+    "stub": [
+      "const UPCOMING = ['created', 'ready', 'live'];"
+    ]
+  },
+  {
+    "id": "fake: active filter includes testing",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "const ACTIVE = [",
+    "lines": 1,
+    "stub": [
+      "const ACTIVE = ['live'];"
+    ]
+  },
+  {
+    "id": "fake: completed sorted newest first",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "status === 'completed'",
+    "lines": 3,
+    "stub": [
+      "time(a.snippet?.scheduledStartTime) - time(b.snippet?.scheduledStartTime),"
+    ]
+  },
+  {
+    "id": "fake: list limit",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": ".slice(0, limit);",
+    "lines": 1,
+    "stub": [
+      ";"
+    ]
+  },
+  {
+    "id": "fake: list returns clones",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "return respond({ kind: 'youtube#liveBroadcastListResponse', items: clone(items) });",
+    "lines": 1,
+    "stub": [
+      "return respond({ kind: 'youtube#liveBroadcastListResponse', items });"
+    ]
+  },
+  {
+    "id": "fake: create title required",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (!data.title?.trim()) throw broadcastError(400, 'titleRequired'",
+    "lines": 1
+  },
+  {
+    "id": "fake: create start time required",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (!data.scheduledStartTime) throw",
+    "lines": 1
+  },
+  {
+    "id": "fake: create privacy required",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (!data.privacyStatus) throw",
+    "lines": 1
+  },
+  {
+    "id": "fake: create start time in the future",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (!isFuture(data.scheduledStartTime)) {",
+    "lines": 3
+  },
+  {
+    "id": "fake: create starts as created",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "status: { lifeCycleStatus: 'created'",
+    "lines": 1,
+    "stub": [
+      "status: { lifeCycleStatus: 'ready', privacyStatus: data.privacyStatus, recordingStatus: 'notRecording' },"
+    ]
+  },
+  {
+    "id": "fake: create unique ids",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "id: nextId('fake-broadcast'),",
+    "lines": 1,
+    "stub": [
+      "id: 'fake-broadcast',"
+    ]
+  },
+  {
+    "id": "fake: title length validation",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (title != null && (title.trim().length === 0",
+    "lines": 3
+  },
+  {
+    "id": "fake: privacy value validation",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (privacy != null && !PRIVACY.includes(privacy)) {",
+    "lines": 3
+  },
+  {
+    "id": "fake: edit id required",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (!body.id) throw",
+    "lines": 1
+  },
+  {
+    "id": "fake: edit start time required",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (!body.snippet?.scheduledStartTime) {",
+    "lines": 3
+  },
+  {
+    "id": "fake: edit monitorStream required",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (monitor?.enableMonitorStream == null) {",
+    "lines": 3
+  },
+  {
+    "id": "fake: edit setup-only fields locked once live",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "for (const field of SETUP_ONLY) {",
+    "lines": 5
+  },
+  {
+    "id": "fake: edit cannot move upcoming into the past",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (inSetup && startChanged && !isFuture(",
+    "lines": 3
+  },
+  {
+    "id": "fake: edit omitted description deleted",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "description: body.snippet.description ?? undefined,",
+    "lines": 1,
+    "stub": [
+      "description: body.snippet.description ?? existing.snippet?.description,"
+    ]
+  },
+  {
+    "id": "fake: edit omitted privacy reverts to private",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "privacyStatus: body.status?.privacyStatus ?? 'private',",
+    "lines": 1,
+    "stub": [
+      "privacyStatus: body.status?.privacyStatus ?? existing.status?.privacyStatus,"
+    ]
+  },
+  {
+    "id": "fake: edit keeps lifecycle",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "lifeCycleStatus: existing.status?.lifeCycleStatus,",
+    "lines": 1,
+    "stub": [
+      "lifeCycleStatus: 'ready',"
+    ]
+  },
+  {
+    "id": "fake: edit keeps binding",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "contentDetails: { ...clone(body.contentDetails), boundStreamId",
+    "lines": 1,
+    "stub": [
+      "contentDetails: { ...clone(body.contentDetails) },"
+    ]
+  },
+  {
+    "id": "fake: edit is stored",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "store.broadcasts[store.broadcasts.indexOf(existing)] = updated;",
+    "lines": 1
+  },
+  {
+    "id": "fake: stop rejects already complete",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (lifeCycle === 'complete') {",
+    "lines": 3
+  },
+  {
+    "id": "fake: stop rejects not on air",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (!ACTIVE.includes(lifeCycle)) {",
+    "lines": 3
+  },
+  {
+    "id": "fake: stop sets complete",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "b.status = { ...b.status, lifeCycleStatus: 'complete'",
+    "lines": 1
+  },
+  {
+    "id": "fake: stop records end time",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "b.snippet = { ...b.snippet, actualEndTime",
+    "lines": 1
+  },
+  {
+    "id": "fake: delete rejects live",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (ACTIVE.includes(b.status?.lifeCycleStatus ?? '')) {",
+    "lines": 3
+  },
+  {
+    "id": "fake: delete removes broadcast",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "store.broadcasts = store.broadcasts.filter((x) => x !== b);",
+    "lines": 1
+  },
+  {
+    "id": "fake: delete removes playlist entries",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "store.playlistItems = store.playlistItems.filter((i) => i.snippet?.resourceId?.videoId !== streamId);",
+    "lines": 1
+  },
+  {
+    "id": "fake: bind rejects unknown stream",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (!getStore().liveStreams.some((s) => s.id === streamId)) {",
+    "lines": 3
+  },
+  {
+    "id": "fake: bind rejects completed",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (b.status?.lifeCycleStatus === 'complete') {",
+    "lines": 3
+  },
+  {
+    "id": "fake: bind sets stream",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "b.contentDetails = { ...b.contentDetails, boundStreamId: streamId };",
+    "lines": 1
+  },
+  {
+    "id": "fake: bind moves created to ready",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (b.status?.lifeCycleStatus === 'created') b.status",
+    "lines": 1
+  },
+  {
+    "id": "fake: key lookup maps ingestion details",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "streamKey: ingestion?.streamName ?? '',",
+    "lines": 1,
+    "stub": [
+      "streamKey: '',"
+    ]
+  },
+  {
+    "id": "fake: keys by id filter",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "return clone(getStore().liveStreams.filter((s) => streamIds.includes(s.id ?? '')).slice(0, 50));",
+    "lines": 1,
+    "stub": [
+      "return clone(getStore().liveStreams);"
+    ]
+  },
+  {
+    "id": "fake: playlist item count",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "contentDetails: { itemCount:",
+    "lines": 1,
+    "stub": [
+      "contentDetails: { itemCount: 0 },"
+    ]
+  },
+  {
+    "id": "fake: playlist items unknown playlist",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "requirePlaylist(playlistId);",
+    "lines": 1,
+    "occurrence": 1
+  },
+  {
+    "id": "fake: add unknown playlist",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "requirePlaylist(playlistId);",
+    "lines": 1,
+    "occurrence": 2
+  },
+  {
+    "id": "fake: add unknown video",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (!video) {",
+    "lines": 3
+  },
+  {
+    "id": "fake: add appends at end",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "const position = store.playlistItems.filter",
+    "lines": 1,
+    "stub": [
+      "const position = 99;"
+    ]
+  },
+  {
+    "id": "fake: remove unknown item",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (!item) {",
+    "lines": 3
+  },
+  {
+    "id": "fake: remove renumbers positions",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": ".forEach((i, position) => {",
+    "lines": 3,
+    "stub": [
+      ";"
+    ]
+  },
+  {
+    "id": "fake: create playlist title required",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (!data.title?.trim()) {",
+    "lines": 3,
+    "occurrence": 1
+  },
+  {
+    "id": "fake: update playlist title required",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (!data.title?.trim()) {",
+    "lines": 3,
+    "occurrence": 2
+  },
+  {
+    "id": "fake: update playlist replaces details",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "playlist.snippet = { title: data.title",
+    "lines": 1,
+    "stub": []
+  },
+  {
+    "id": "fake: delete playlist removes items",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "store.playlistItems = store.playlistItems.filter((i) => i.snippet?.playlistId !== playlistId);",
+    "lines": 1
+  },
+  {
+    "id": "fake: scenario rejects unknown key",
+    "file": "lib/services/youtube/fake/scenario.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (b.boundStreamId && !keyIds.has(b.boundStreamId)) {",
+    "lines": 3
+  },
+  {
+    "id": "fake: scenario rejects unknown video",
+    "file": "lib/services/youtube/fake/scenario.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "if (!video) {",
+    "lines": 3
+  },
+  {
+    "id": "fake: scenario applies time offsets",
+    "file": "lib/services/youtube/fake/scenario.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "scheduledStartTime: at(now, b.scheduledStartOffsetMinutes),",
+    "lines": 1,
+    "stub": [
+      "scheduledStartTime: at(now, 0),"
+    ]
+  },
+  {
+    "id": "fake: scenario builds playlist items",
+    "file": "lib/services/youtube/fake/scenario.ts",
+    "test": "tests/unit/lib/services/fake.test.ts",
+    "start": "playlistItems.push(newPlaylistItem(",
+    "lines": 1,
+    "stub": []
   }
 ]

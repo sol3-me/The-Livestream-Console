@@ -1,6 +1,7 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as playlists from '@/lib/playlists';
 import { getYouTubeService } from '@/lib/services/youtube';
+import { resetFakeStore } from '@/lib/services/youtube/fake/store';
 import { googleYouTubeService } from '@/lib/services/youtube/google';
 import * as streams from '@/lib/youtube';
 
@@ -27,9 +28,46 @@ describe('getYouTubeService', () => {
     expect(getYouTubeService()).toBe(googleYouTubeService);
   });
 
-  it('refuses fake mode until the fake service exists (Phase 1D)', () => {
-    process.env.TLC_YOUTUBE_MODE = 'fake';
-    expect(() => getYouTubeService()).toThrow('TLC_YOUTUBE_MODE=fake is not available yet (Phase 1D)');
+  describe('fake mode', () => {
+    beforeEach(() => {
+      process.env.TLC_YOUTUBE_MODE = 'fake';
+      resetFakeStore();
+    });
+
+    it('returns the in-memory fake, not the Google service', async () => {
+      const yt = getYouTubeService();
+      expect(yt).not.toBe(googleYouTubeService);
+      const { data } = await yt.getStreams('token', 'active');
+      expect(data.items?.map((b) => b.id)).toEqual(['live-1']);
+    });
+
+    it('shares one store across calls, so a write in one request is seen by the next', async () => {
+      const { data } = await getYouTubeService().createStream('token', {
+        title: 'Shared',
+        description: '',
+        scheduledStartTime: new Date(Date.now() + 3_600_000).toISOString(),
+        privacyStatus: 'private',
+        enableAutoStart: false,
+        enableAutoStop: false,
+      });
+      const [found] = (await getYouTubeService().getStreamById('token', data.id!)).data.items!;
+      expect(found.snippet?.title).toBe('Shared');
+    });
+
+    it('keeps the store on globalThis, so a separately bundled copy of the module sees the same state', async () => {
+      await getYouTubeService().stopStreamById('token', 'live-1');
+      vi.resetModules();
+      const fresh = await import('@/lib/services/youtube');
+      const { data } = await fresh.getYouTubeService().getStreams('token', 'active');
+      expect(data.items).toEqual([]);
+    });
+
+    it('resetFakeStore restores the seeded scenario', async () => {
+      await getYouTubeService().stopStreamById('token', 'live-1');
+      resetFakeStore();
+      const { data } = await getYouTubeService().getStreams('token', 'active');
+      expect(data.items?.map((b) => b.id)).toEqual(['live-1']);
+    });
   });
 
   it.each(['bogus', 'Google', ' google'])('rejects an unknown mode %j instead of falling back to Google', (mode) => {

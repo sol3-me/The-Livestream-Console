@@ -59,7 +59,7 @@ export function createFakeYouTubeService(getStore: () => FakeStore, now: () => D
     }
   }
 
-  return {
+  const service: YouTubeService = {
     async getStreams(_token, status = 'upcoming', limit = 10) {
       const states = BY_FILTER[status] ?? [];
       const items = getStore()
@@ -326,4 +326,15 @@ export function createFakeYouTubeService(getStore: () => FakeStore, now: () => D
       return respond('');
     },
   };
+
+  // A failing scenario (api-error) rejects every call before it touches the store.
+  const guarded = Object.entries(service).map(([name, method]) => [
+    name,
+    async (...args: unknown[]) => {
+      const failure = getStore().failWith;
+      if (failure) throw new YouTubeApiError(failure.code, failure.domain, failure.reason, failure.message);
+      return (method as (...a: unknown[]) => unknown)(...args);
+    },
+  ]);
+  return Object.fromEntries(guarded) as YouTubeService;
 }

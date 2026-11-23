@@ -1369,5 +1369,95 @@
     "start": "playlistItems.push(newPlaylistItem(",
     "lines": 1,
     "stub": []
+  },
+  {
+    "id": "test-support: fake-mode gate",
+    "file": "app/api/test-support/scenario/route.ts",
+    "test": "tests/unit/api/test-support.test.ts",
+    "start": "if (process.env.TLC_YOUTUBE_MODE !== 'fake') {",
+    "lines": 3
+  },
+  {
+    "id": "test-support: defaults to the default scenario",
+    "file": "app/api/test-support/scenario/route.ts",
+    "test": "tests/unit/api/test-support.test.ts",
+    "start": "const scenario = body?.scenario ?? DEFAULT_SCENARIO;",
+    "lines": 1,
+    "stub": [
+      "const scenario = body?.scenario;"
+    ]
+  },
+  {
+    "id": "test-support: unknown scenario is a 400",
+    "file": "app/api/test-support/scenario/route.ts",
+    "test": "tests/unit/api/test-support.test.ts",
+    "start": "if (!isScenarioName(scenario)) {",
+    "lines": 6
+  },
+  {
+    "id": "test-support: resets the store",
+    "file": "app/api/test-support/scenario/route.ts",
+    "test": "tests/unit/api/test-support.test.ts",
+    "start": "resetFakeStore(scenario);",
+    "lines": 1
+  },
+  {
+    "id": "fake store: reset uses the named scenario",
+    "file": "lib/services/youtube/fake/store.ts",
+    "test": "tests/unit/lib/services/scenarios.test.ts",
+    "start": "(globalThis as Holder)[KEY] = createFakeStore(SCENARIOS[name], now);",
+    "lines": 1,
+    "stub": [
+      "(globalThis as Holder)[KEY] = createFakeStore(SCENARIOS[DEFAULT_SCENARIO], now);"
+    ]
+  },
+  {
+    "id": "fake scenarios: isScenarioName only accepts known names",
+    "file": "lib/services/youtube/fake/scenarios/index.ts",
+    "test": "tests/unit/lib/services/scenarios.test.ts",
+    "start": "return (SCENARIO_NAMES as readonly unknown[]).includes(name);",
+    "lines": 1,
+    "stub": [
+      "return typeof name === 'string';"
+    ]
+  },
+  {
+    "id": "fake: failing scenario rejects every call",
+    "file": "lib/services/youtube/fake/service.ts",
+    "test": "tests/unit/lib/services/scenarios.test.ts",
+    "start": "if (failure) throw new YouTubeApiError",
+    "lines": 1
+  },
+  {
+    "id": "fake scenario: failWith copied into the store",
+    "file": "lib/services/youtube/fake/scenario.ts",
+    "test": "tests/unit/lib/services/scenarios.test.ts",
+    "start": "return { broadcasts, liveStreams, playlists, playlistItems, nextId: 1, failWith: scenario.failWith };",
+    "lines": 1,
+    "stub": [
+      "return { broadcasts, liveStreams, playlists, playlistItems, nextId: 1 };"
+    ]
+  },
+  {
+    "id": "instrumentation: fake-mode warning",
+    "file": "instrumentation.ts",
+    "test": "tests/unit/instrumentation.test.ts",
+    "start": "console.warn('[TLC] ****",
+    "lines": 6,
+    "occurrence": 1
+  },
+  {
+    "id": "instrumentation: invalid mode error",
+    "file": "instrumentation.ts",
+    "test": "tests/unit/instrumentation.test.ts",
+    "start": "console.error(`[TLC] Invalid TLC_YOUTUBE_MODE",
+    "lines": 1
+  },
+  {
+    "id": "instrumentation: mode is reported",
+    "file": "instrumentation.ts",
+    "test": "tests/unit/instrumentation.test.ts",
+    "start": "reportYouTubeMode(process.env.TLC_YOUTUBE_MODE ?? '');",
+    "lines": 1
   }
 ]

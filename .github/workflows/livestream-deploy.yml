@@ -87,6 +87,10 @@ jobs:
           load: true
           tags: ${{ env.IMAGE }}:latest
 
+      - name: Trim build cache
+        if: always()
+        run: |
+          docker builder prune -f --keep-storage=2GB
       - name: Push :latest to GHCR
         run: docker push ${{ env.IMAGE }}:latest
 
